@@ -1,0 +1,171 @@
+[project]
+name = "spark-bootcamp-lesson-02"
+version = "0.1.0"
+description = "DataFrames & Spark SQL - Lesson 2 of the Spark Bootcamp"
+authors = [
+    {name = "Spark Bootcamp", email = "bootcamp@example.com"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9,<3.13"
+keywords = ["apache-spark", "pyspark", "dataframes", "spark-sql", "big-data"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Education",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    # Core Spark dependencies
+    "pyspark>=3.5.0,<3.6.0",
+
+    # Jupyter and notebook dependencies
+    "jupyter>=1.0.0",
+    "notebook>=7.0.0",
+    "ipykernel>=6.25.0",
+    "ipywidgets>=8.0.0",
+
+    # Data science and visualization (enhanced for DataFrames)
+    "pandas>=2.0.0",
+    "numpy>=1.24.0",
+    "matplotlib>=3.7.0",
+    "seaborn>=0.12.0",
+    "plotly>=5.15.0",          # Interactive plotting
+    "bokeh>=3.2.0",            # Advanced visualizations
+
+    # SQL and data quality
+    "sqlparse>=0.4.0",         # SQL parsing and formatting
+    "great-expectations>=0.17.0",  # Data quality validation
+
+    # Development and testing
+    "pytest>=7.4.0",
+    "pytest-spark>=0.6.0",
+
+    # Utilities
+    "python-dotenv>=1.0.0",    # For .env file support
+    "rich>=13.0.0",            # Beautiful terminal output
+    "tabulate>=0.9.0",         # Pretty table printing
+]
+
+[project.optional-dependencies]
+dev = [
+    # Development tools
+    "black>=23.0.0",           # Code formatting
+    "isort>=5.12.0",           # Import sorting
+    "flake8>=6.0.0",           # Linting
+    "mypy>=1.5.0",             # Type checking
+    "pre-commit>=3.0.0",       # Git hooks
+    "sqlfluff>=2.3.0",         # SQL linting and formatting
+
+    # Additional testing
+    "pytest-cov>=4.0.0",      # Coverage reporting
+    "pytest-xdist>=3.0.0",    # Parallel testing
+    "pytest-benchmark>=4.0.0", # Performance testing
+]
+
+visualization = [
+    # Advanced visualization tools
+    "altair>=5.0.0",           # Statistical visualizations
+    "graphviz>=0.20.0",        # Graph plotting
+    "pydot>=1.4.0",            # DOT graph language
+]
+
+performance = [
+    # Performance monitoring and profiling
+    "py4j>=0.10.9",            # Spark-Python bridge optimization
+    "psutil>=5.9.0",           # System monitoring
+    "memory-profiler>=0.60.0", # Memory profiling
+    "line-profiler>=4.0.0",    # Line-by-line profiling
+]
+
+all = [
+    "spark-bootcamp-lesson-02[dev,visualization,performance]"
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/spark-bootcamp"
+Documentation = "https://github.com/your-org/spark-bootcamp/tree/main/lessons/lesson-02-dataframes"
+Repository = "https://github.com/your-org/spark-bootcamp"
+"Bug Tracker" = "https://github.com/your-org/spark-bootcamp/issues"
+
+[project.scripts]
+# Convenient scripts for running exercises
+spark-df-exercise-1 = "exercises.exercise_1:run_exercises"
+spark-df-exercise-2 = "exercises.exercise_2:run_exercises"
+spark-df-exercise-3 = "exercises.exercise_3:run_exercises"
+spark-df-exercise-4 = "exercises.exercise_4:run_exercises"
+spark-df-exercise-5 = "exercises.exercise_5:run_exercises"
+spark-df-exercise-6 = "exercises.exercise_6:run_exercises"
+spark-df-exercise-7 = "exercises.exercise_7:run_exercises"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--disable-warnings",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "dataframe: marks tests that require DataFrame operations",
+    "sql: marks tests that require SQL functionality",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pyspark.*",
+    "py4j.*",
+    "matplotlib.*",
+    "seaborn.*",
+    "plotly.*",
+]
+ignore_missing_imports = true
+
+[tool.sqlfluff.core]
+dialect = "spark"
+templater = "jinja"
+
+[tool.sqlfluff.indentation]
+tab_space_size = 4
+
+[tool.uv]
+dev-dependencies = [
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "sqlfluff>=2.3.0",
+    "pytest-benchmark>=4.0.0",
+]
