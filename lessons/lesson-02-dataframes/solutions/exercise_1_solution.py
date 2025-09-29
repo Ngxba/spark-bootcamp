@@ -92,71 +92,71 @@ def exercise_1f(spark: SparkSession, df):
 
 
 def run_solutions():
-    \"\"\"Run all solutions and display results.\"\"\"
+    """Run all solutions and display results."""
     spark = setup_spark()
 
-    print(\"✅ Exercise 1 Solutions\")
-    print(\"=\" * 30)
+    print("✅ Exercise 1 Solutions")
+    print("=" * 30)
 
     # Solution 1a
-    print(\"\\n1a. Create DataFrame from Tuples\")
-    data = [(\"Alice\", 25), (\"Bob\", 30), (\"Charlie\", 35)]
-    columns = [\"name\", \"age\"]
+    print("\n1a. Create DataFrame from Tuples")
+    data = [("Alice", 25), ("Bob", 30), ("Charlie", 35)]
+    columns = ["name", "age"]
     result_1a = exercise_1a(spark, data, columns)
     result_1a.show()
 
     # Solution 1b
-    print(\"\\n1b. Create DataFrame from Dictionaries\")
+    print("\n1b. Create DataFrame from Dictionaries")
     dict_data = [
-        {\"name\": \"Alice\", \"age\": 25, \"salary\": 50000},
-        {\"name\": \"Bob\", \"age\": 30, \"salary\": 60000}
+        {"name": "Alice", "age": 25, "salary": 50000},
+        {"name": "Bob", "age": 30, "salary": 60000}
     ]
     df, schema_str = exercise_1b(spark, dict_data)
     df.show()
-    print(f\"Schema: {schema_str}\")
+    print(f"Schema: {schema_str}")
 
     # Solution 1c
-    print(\"\\n1c. Create DataFrame with Explicit Schema\")
-    data = [(\"Alice\", 25, 80000.0), (\"Bob\", 30, 75000.0)]
+    print("\n1c. Create DataFrame with Explicit Schema")
+    data = [("Alice", 25, 80000.0), ("Bob", 30, 75000.0)]
     result_1c = exercise_1c(spark, data)
     result_1c.show()
     result_1c.printSchema()
 
     # Solution 1d
-    print(\"\\n1d. Filter and Select Operations\")
+    print("\n1d. Filter and Select Operations")
     test_data = [
-        (\"Alice\", 25, \"Engineering\", 80000),
-        (\"Bob\", 30, \"Marketing\", 75000),
-        (\"Charlie\", 35, \"Engineering\", 85000),
-        (\"Diana\", 28, \"Sales\", 70000)
+        ("Alice", 25, "Engineering", 80000),
+        ("Bob", 30, "Marketing", 75000),
+        ("Charlie", 35, "Engineering", 85000),
+        ("Diana", 28, "Sales", 70000)
     ]
-    test_df = spark.createDataFrame(test_data, [\"name\", \"age\", \"department\", \"salary\"])
+    test_df = spark.createDataFrame(test_data, ["name", "age", "department", "salary"])
     result_1d = exercise_1d(spark, test_df)
     result_1d.show()
 
     # Solution 1e
-    print(\"\\n1e. Add Calculated Columns\")
-    test_data = [(\"Alice\", 25, 80000), (\"Bob\", 35, 75000)]
-    test_df = spark.createDataFrame(test_data, [\"name\", \"age\", \"salary\"])
+    print("\n1e. Add Calculated Columns")
+    test_data = [("Alice", 25, 80000), ("Bob", 35, 75000)]
+    test_df = spark.createDataFrame(test_data, ["name", "age", "salary"])
     result_1e = exercise_1e(spark, test_df)
     result_1e.show()
 
     # Solution 1f
-    print(\"\\n1f. Group By Aggregations\")
+    print("\n1f. Group By Aggregations")
     test_data = [
-        (\"Engineering\", 80000),
-        (\"Engineering\", 85000),
-        (\"Marketing\", 75000),
-        (\"Sales\", 70000),
-        (\"Sales\", 72000)
+        ("Engineering", 80000),
+        ("Engineering", 85000),
+        ("Marketing", 75000),
+        ("Sales", 70000),
+        ("Sales", 72000)
     ]
-    test_df = spark.createDataFrame(test_data, [\"department\", \"salary\"])
+    test_df = spark.createDataFrame(test_data, ["department", "salary"])
     result_1f = exercise_1f(spark, test_df)
     result_1f.show()
 
     spark.stop()
-    print(\"\\n🎓 All solutions demonstrated successfully!\")
+    print("\n🎓 All solutions demonstrated successfully!")
 
 
-if __name__ == \"__main__\":
-    run_solutions()"
+if __name__ == "__main__":
+    run_solutions()
