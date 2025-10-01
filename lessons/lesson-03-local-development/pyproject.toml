@@ -1,0 +1,213 @@
+[project]
+name = "spark-bootcamp-lesson-03"
+version = "0.1.0"
+description = "Local Development Setup - Lesson 3 of the Spark Bootcamp"
+authors = [
+    {name = "Spark Bootcamp", email = "bootcamp@example.com"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9,<3.13"
+keywords = ["apache-spark", "pyspark", "development", "project-structure", "best-practices"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Education",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    # Core Spark dependencies
+    "pyspark>=3.5.0,<3.6.0",
+
+    # Jupyter and notebook dependencies
+    "jupyter>=1.0.0",
+    "notebook>=7.0.0",
+    "ipykernel>=6.25.0",
+    "ipywidgets>=8.0.0",
+
+    # Data science essentials
+    "pandas>=2.1.1",
+    "numpy<2.0.0",
+
+    # Configuration management
+    "python-dotenv>=1.0.0",    # For .env file support
+    "pydantic>=2.0.0",         # Configuration validation
+    "omegaconf>=2.3.0",        # Hierarchical configuration
+    "click>=8.0.0",            # CLI interface building
+
+    # Development and testing
+    "pytest>=7.4.0",
+    "pytest-spark>=0.6.0",
+    "pytest-cov>=4.0.0",       # Coverage reporting
+
+    # Code quality and formatting
+    "black>=23.0.0",           # Code formatting
+    "isort>=5.12.0",           # Import sorting
+    "flake8>=6.0.0",           # Linting
+    "mypy>=1.5.0",             # Type checking
+
+    # Pre-commit and Git hooks
+    "pre-commit>=3.0.0",       # Git hooks management
+
+    # Utilities
+    "rich>=13.0.0",            # Beautiful terminal output
+    "typer>=0.9.0",            # CLI framework
+    "pathlib>=1.0.0",          # Path manipulation
+    "jinja2>=3.1.0",           # Template engine for project generation
+]
+
+[project.optional-dependencies]
+dev = [
+    # Enhanced development tools
+    "pytest-xdist>=3.0.0",    # Parallel testing
+    "pytest-benchmark>=4.0.0", # Performance testing
+    "coverage>=7.0.0",         # Coverage analysis
+
+    # Advanced linting and formatting
+    "bandit>=1.7.0",           # Security linting
+    "safety>=2.0.0",           # Dependency vulnerability checking
+    "pylint>=2.17.0",          # Advanced linting
+
+    # Documentation tools
+    "sphinx>=7.0.0",           # Documentation generation
+    "sphinx-rtd-theme>=1.3.0", # Read the Docs theme
+]
+
+docker = [
+    # Docker development support
+    "docker>=6.1.0",           # Docker Python API
+    "docker-compose>=1.29.0",  # Docker Compose support
+]
+
+ci-cd = [
+    # CI/CD pipeline support
+    "tox>=4.0.0",             # Testing in multiple environments
+    "build>=0.10.0",          # Package building
+    "twine>=4.0.0",           # Package publishing
+]
+
+templates = [
+    # Project template generation
+    "cookiecutter>=2.0.0",    # Project template engine
+    "copier>=8.0.0",          # Alternative template engine
+]
+
+all = [
+    "spark-bootcamp-lesson-03[dev,docker,ci-cd,templates]"
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/spark-bootcamp"
+Documentation = "https://github.com/your-org/spark-bootcamp/tree/main/lessons/lesson-03-local-development"
+Repository = "https://github.com/your-org/spark-bootcamp"
+"Bug Tracker" = "https://github.com/your-org/spark-bootcamp/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["exercises", "solutions", "templates"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-v",
+    "--tb=short",
+    "--strict-markers",
+    "--disable-warnings",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "project_structure: marks tests for project structure validation",
+    "workflow: marks tests for development workflow",
+    "config: marks tests for configuration management",
+]
+
+[tool.black]
+line-length = 100
+target-version = ['py39', 'py310', 'py311', 'py312']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.pytest_cache
+  | \.venv
+  | build
+  | dist
+  | templates
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+multi_line_output = 3
+known_first_party = ["exercises", "solutions"]
+
+[tool.mypy]
+python_version = "3.9"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "pyspark.*",
+    "py4j.*",
+    "cookiecutter.*",
+    "copier.*",
+]
+ignore_missing_imports = true
+
+[tool.flake8]
+max-line-length = 100
+extend-ignore = ["E203", "W503"]
+exclude = [
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".venv",
+    "build",
+    "dist",
+    "templates",
+]
+
+[tool.bandit]
+exclude_dirs = ["tests", "templates"]
+skips = ["B101"]  # Skip assert_used test
+
+[tool.coverage.run]
+source = ["exercises", "solutions"]
+omit = ["*/tests/*", "*/templates/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "black>=23.0.0",
+    "isort>=5.12.0",
+    "flake8>=6.0.0",
+    "mypy>=1.5.0",
+    "pre-commit>=3.0.0",
+    "pytest-benchmark>=4.0.0",
+]

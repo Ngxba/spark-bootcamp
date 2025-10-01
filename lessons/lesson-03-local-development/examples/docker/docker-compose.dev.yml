@@ -1,0 +1,250 @@
+version: '3.8'
+
+services:
+  # Main Spark application development environment
+  spark-dev:
+    build:
+      context: ../..
+      dockerfile: examples/docker/Dockerfile.dev
+    container_name: spark-dev
+    environment:
+      - ENVIRONMENT=development
+      - SPARK_MASTER_HOST=spark-master
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=spark_dev
+      - POSTGRES_USER=spark_user
+      - POSTGRES_PASSWORD=spark_password
+    volumes:
+      # Hot reload for source code
+      - ../../src:/app/src
+      - ../../tests:/app/tests
+      - ../../config:/app/config
+      - ../../data:/app/data
+      - ../../notebooks:/app/notebooks
+      - ../../logs:/app/logs
+      # Preserve Python packages and pre-commit hooks
+      - spark-dev-python-packages:/home/sparkuser/.local
+      - spark-dev-git-hooks:/app/.git/hooks
+    ports:
+      - "4040:4040"  # Spark UI
+      - "8888:8888"  # Jupyter Lab
+      - "8000:8000"  # Development server
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - spark-network
+    restart: unless-stopped
+    command: >
+      bash -c "
+        echo 'Starting development environment...' &&
+        jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --NotebookApp.token='' --NotebookApp.password='' &
+        echo 'Jupyter Lab started on port 8888' &&
+        tail -f /dev/null
+      "
+
+  # Spark Master for cluster mode development
+  spark-master:
+    image: bitnami/spark:3.5.0
+    container_name: spark-master
+    environment:
+      - SPARK_MODE=master
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - "8080:8080"  # Spark Master UI
+      - "7077:7077"  # Spark Master port
+    volumes:
+      - ../../data:/app/data
+      - ../../logs:/opt/bitnami/spark/logs
+    networks:
+      - spark-network
+
+  # Spark Worker
+  spark-worker:
+    image: bitnami/spark:3.5.0
+    container_name: spark-worker
+    environment:
+      - SPARK_MODE=worker
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_WORKER_MEMORY=2G
+      - SPARK_WORKER_CORES=2
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - "8081:8081"  # Spark Worker UI
+    volumes:
+      - ../../data:/app/data
+      - ../../logs:/opt/bitnami/spark/logs
+    depends_on:
+      - spark-master
+    networks:
+      - spark-network
+
+  # PostgreSQL for testing database operations
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-dev
+    environment:
+      POSTGRES_DB: spark_dev
+      POSTGRES_USER: spark_user
+      POSTGRES_PASSWORD: spark_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../../scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - spark-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U spark_user -d spark_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    container_name: redis-dev
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - spark-network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  # MinIO for S3-compatible storage testing
+  minio:
+    image: minio/minio:latest
+    container_name: minio-dev
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - spark-network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  # Kafka for streaming data testing
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-dev
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+    depends_on:
+      - zookeeper
+    networks:
+      - spark-network
+    volumes:
+      - kafka-data:/var/lib/kafka/data
+
+  # Zookeeper for Kafka
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper-dev
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - "2181:2181"
+    networks:
+      - spark-network
+    volumes:
+      - zookeeper-data:/var/lib/zookeeper/data
+
+  # Monitoring with Prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus-dev
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../../examples/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    networks:
+      - spark-network
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-dev
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ../../examples/monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ../../examples/monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - spark-network
+    depends_on:
+      - prometheus
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  kafka-data:
+  zookeeper-data:
+  prometheus-data:
+  grafana-data:
+  spark-dev-python-packages:
+  spark-dev-git-hooks:
+
+networks:
+  spark-network:
+    driver: bridge
+
+# Development helper commands
+# Run with: docker-compose -f examples/docker/docker-compose.dev.yml <command>
+#
+# Start development environment:
+#   docker-compose -f examples/docker/docker-compose.dev.yml up -d
+#
+# View logs:
+#   docker-compose -f examples/docker/docker-compose.dev.yml logs -f spark-dev
+#
+# Execute shell in development container:
+#   docker-compose -f examples/docker/docker-compose.dev.yml exec spark-dev bash
+#
+# Run tests:
+#   docker-compose -f examples/docker/docker-compose.dev.yml exec spark-dev pytest
+#
+# Run Spark job:
+#   docker-compose -f examples/docker/docker-compose.dev.yml exec spark-dev python -m src.jobs.my_job
+#
+# Stop everything:
+#   docker-compose -f examples/docker/docker-compose.dev.yml down -v
