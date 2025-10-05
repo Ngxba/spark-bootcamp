@@ -3,7 +3,7 @@ Data aggregation transformations for Spark DataFrames.
 This module provides reusable aggregation functions for analytics and reporting.
 """
 
-from typing import Dict, List
+from typing import Dict
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
     col,
@@ -15,18 +15,14 @@ from pyspark.sql.functions import (
     countDistinct,
     when,
     desc,
-    asc,
     round as spark_round,
     date_format,
     year,
     month,
-    dayofmonth,
     dayofweek,
     quarter,
-    to_date,
 )
 from pyspark.sql.window import Window
-from pyspark.sql.types import DoubleType
 
 
 class DataAggregator:

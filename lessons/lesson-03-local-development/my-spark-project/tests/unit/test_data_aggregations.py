@@ -4,7 +4,6 @@ This module tests the DataAggregator class and its methods.
 """
 
 import pytest
-from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, to_date
 from pyspark.sql.types import (
     StructType,
@@ -16,8 +15,6 @@ from pyspark.sql.types import (
 )
 
 from src.transformations.aggregations import DataAggregator
-from pyspark.sql.window import Window
-from pyspark.sql.functions import row_number
 
 
 class TestDataAggregator:

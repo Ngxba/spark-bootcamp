@@ -11,11 +11,9 @@ from pyspark.sql.types import (
     StringType,
     IntegerType,
     DoubleType,
-    DateType,
 )
 import tempfile
 import shutil
-from pathlib import Path
 
 
 @pytest.fixture(scope="session")

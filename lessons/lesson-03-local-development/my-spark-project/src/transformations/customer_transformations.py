@@ -3,7 +3,7 @@ Customer-specific data transformations for business logic.
 This module provides customer domain transformations including segmentation, analytics, and business rules.
 """
 
-from typing import Dict, List
+from typing import Dict
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
     col,
@@ -16,7 +16,6 @@ from pyspark.sql.functions import (
     desc,
     round as spark_round,
 )
-from pyspark.sql.window import Window
 
 from .base_cleaning import BaseDataCleaner
 from .base_aggregations import BaseDataAggregator

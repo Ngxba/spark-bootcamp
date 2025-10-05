@@ -3,7 +3,7 @@ Sales-specific data transformations for business logic.
 This module provides sales domain transformations including analytics, trends, and business rules.
 """
 
-from typing import Dict, List
+from typing import Dict
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
     col,
@@ -16,13 +16,11 @@ from pyspark.sql.functions import (
     countDistinct,
     desc,
     round as spark_round,
-    to_date,
     year,
     month,
     quarter,
     dayofweek,
     date_format,
-    datediff,
     lit,
     coalesce,
     abs,

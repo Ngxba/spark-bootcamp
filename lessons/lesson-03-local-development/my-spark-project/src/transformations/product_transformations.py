@@ -3,7 +3,7 @@ Product-specific data transformations for business logic.
 This module provides product domain transformations including analytics, performance metrics, and business rules.
 """
 
-from typing import Dict, List
+from typing import Dict
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
     col,

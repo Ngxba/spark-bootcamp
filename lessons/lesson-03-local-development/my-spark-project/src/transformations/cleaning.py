@@ -9,18 +9,14 @@ from pyspark.sql.functions import (
     col,
     when,
     isnan,
-    isnull,
     regexp_replace,
     trim,
     upper,
-    lower,
     to_date,
-    to_timestamp,
     round as spark_round,
     coalesce,
     lit,
 )
-from pyspark.sql.types import DoubleType, IntegerType
 
 
 class DataCleaner:

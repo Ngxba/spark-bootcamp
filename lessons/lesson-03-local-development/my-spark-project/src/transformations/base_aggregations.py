@@ -3,7 +3,7 @@ Base data aggregation transformations for Spark DataFrames.
 This module provides generic, reusable aggregation functions that can be applied across domains.
 """
 
-from typing import Dict, List, Optional
+from typing import Dict, List
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
     col,
@@ -13,24 +13,17 @@ from pyspark.sql.functions import (
     max as spark_max,
     min as spark_min,
     countDistinct,
-    when,
     desc,
     asc,
     round as spark_round,
     date_format,
     year,
-    month,
-    dayofmonth,
-    dayofweek,
     quarter,
-    to_date,
     stddev,
-    variance,
     lit,
     concat,
 )
 from pyspark.sql.window import Window
-from pyspark.sql.types import DoubleType
 
 
 class BaseDataAggregator:

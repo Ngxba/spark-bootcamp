@@ -282,7 +282,7 @@ class SparkUtils:
         """
         app_id = spark.sparkContext.applicationId
         ui_web_url = spark.sparkContext.uiWebUrl
-        return f"{ui_web_url}" if ui_web_url else f"http://localhost:4040"
+        return f"{ui_web_url}" if ui_web_url else "http://localhost:4040"
 
     @staticmethod
     def log_dataframe_info(df: DataFrame, name: str, logger: logging.Logger) -> None:

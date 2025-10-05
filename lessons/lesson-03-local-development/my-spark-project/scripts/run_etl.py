@@ -21,7 +21,6 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from src.jobs.etl_job import ETLJob
-from src.config.settings import ConfigManager
 from src.utils.file_utils import FileUtils
 
 

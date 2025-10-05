@@ -6,9 +6,8 @@ This module provides helper functions for file operations and path management.
 import os
 import json
 import yaml
-from typing import Dict, Any, List, Optional, Union
+from typing import Dict, Any, List, Optional
 from pathlib import Path
-import logging
 
 
 class FileUtils:
@@ -261,7 +260,7 @@ class FileUtils:
                 os.remove(file_path)
                 return True
             return True  # File didn't exist, consider it "deleted"
-        except Exception as e:
+        except Exception:
             if ignore_errors:
                 return False
             raise

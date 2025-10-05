@@ -4,9 +4,7 @@ This module tests the complete ETL pipeline end-to-end.
 """
 
 import pytest
-import tempfile
 import os
-from pathlib import Path
 
 from src.jobs.etl_job import ETLJob
 from src.utils.file_utils import FileUtils

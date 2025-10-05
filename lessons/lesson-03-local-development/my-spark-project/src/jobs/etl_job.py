@@ -3,9 +3,9 @@ ETL job implementation demonstrating common data processing patterns.
 This module shows how to build production-ready ETL pipelines with Spark.
 """
 
-from typing import Dict, Any, List
+from typing import Dict, Any
 from pyspark.sql import DataFrame
-from pyspark.sql.functions import col, when, isnan, isnull, regexp_replace, trim, upper
+from pyspark.sql.functions import col, isnan
 
 from .base_job import BaseSparkJob
 from ..transformations.customer_transformations import CustomerTransformations

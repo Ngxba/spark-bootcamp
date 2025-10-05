@@ -3,9 +3,7 @@ Unit tests for data cleaning functionality.
 This module tests the DataCleaner class and its methods.
 """
 
-import pytest
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, lit
+from pyspark.sql.functions import col
 from pyspark.sql.types import (
     StructType,
     StructField,

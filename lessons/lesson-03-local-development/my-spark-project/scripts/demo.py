@@ -15,7 +15,6 @@ sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from src.jobs.etl_job import ETLJob
 from src.utils.file_utils import FileUtils
-from src.utils.spark_utils import SparkUtils
 
 
 def create_demo_data():
