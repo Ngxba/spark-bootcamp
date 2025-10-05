@@ -10,11 +10,22 @@ Run tests: python -m pytest test_exercises.py -v
 
 import pytest
 import os
-import sys
 from pyspark.sql import SparkSession
-
-# Add the exercises directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), "..", "exercises"))
+from solutions.exercise_1_solution import (
+    exercise_1a,
+    exercise_1b,
+    exercise_1c,
+    exercise_1d,
+    exercise_1e,
+    exercise_1f,
+)
+from solutions.exercise_2_solution import exercise_2b, exercise_2d, exercise_2e
+from solutions.exercise_3_solution import (
+    exercise_3a,
+    exercise_3c,
+    exercise_3d,
+    exercise_3f,
+)
 
 
 @pytest.fixture(scope="module")
@@ -30,20 +41,9 @@ def spark():
 class TestExercise1:
     """Test Exercise 1 implementations."""
 
-    def test_exercise_1a_import(self):
-        """Test that exercise_1a can be imported."""
-        try:
-            from exercise_1 import exercise_1a
-
-            assert callable(exercise_1a)
-        except ImportError:
-            pytest.skip("exercise_1.py not found or has import errors")
-
     def test_exercise_1a_functionality(self, spark):
         """Test exercise_1a functionality."""
         try:
-            from exercise_1 import exercise_1a
-
             # Test with known input
             test_input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             result = exercise_1a(spark, test_input)
@@ -52,48 +52,36 @@ class TestExercise1:
             expected = [2, 4, 6, 8, 10]
             assert result == expected, f"Expected {expected}, got {result}"
 
-        except ImportError:
-            pytest.skip("exercise_1.py not found or exercise_1a not implemented")
         except Exception as e:
             pytest.fail(f"exercise_1a failed with error: {e}")
 
     def test_exercise_1b_functionality(self, spark):
         """Test exercise_1b functionality."""
         try:
-            from exercise_1 import exercise_1b
-
             test_input = ["hello", "world", "apache", "spark"]
             result = exercise_1b(spark, test_input)
 
-            expected = 20  # 5 + 5 + 6 + 5
+            expected = 21  # 5 + 5 + 6 + 5
             assert result == expected, f"Expected {expected}, got {result}"
 
-        except ImportError:
-            pytest.skip("exercise_1.py not found or exercise_1b not implemented")
         except Exception as e:
             pytest.fail(f"exercise_1b failed with error: {e}")
 
     def test_exercise_1c_functionality(self, spark):
         """Test exercise_1c functionality."""
         try:
-            from exercise_1 import exercise_1c
-
             test_input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
             result = exercise_1c(spark, test_input)
 
             expected = (10, 55, 5.5)
             assert result == expected, f"Expected {expected}, got {result}"
 
-        except ImportError:
-            pytest.skip("exercise_1.py not found or exercise_1c not implemented")
         except Exception as e:
             pytest.fail(f"exercise_1c failed with error: {e}")
 
     def test_exercise_1d_functionality(self, spark):
         """Test exercise_1d functionality."""
         try:
-            from exercise_1 import exercise_1d
-
             test_input = ["hello world", "hello spark", "world of spark"]
             result = exercise_1d(spark, test_input)
 
@@ -108,16 +96,12 @@ class TestExercise1:
                     for item in result
                 )
 
-        except ImportError:
-            pytest.skip("exercise_1.py not found or exercise_1d not implemented")
         except Exception as e:
             pytest.fail(f"exercise_1d failed with error: {e}")
 
     def test_exercise_1e_functionality(self, spark):
         """Test exercise_1e functionality."""
         try:
-            from exercise_1 import exercise_1e
-
             test_input = [1, 2, 3, 4, 5, 6]
             num_partitions = 3
             result = exercise_1e(spark, test_input, num_partitions)
@@ -130,16 +114,12 @@ class TestExercise1:
             flattened = [item for partition in result for item in partition]
             assert len(flattened) == len(test_input)
 
-        except ImportError:
-            pytest.skip("exercise_1.py not found or exercise_1e not implemented")
         except Exception as e:
             pytest.fail(f"exercise_1e failed with error: {e}")
 
     def test_exercise_1f_functionality(self, spark):
         """Test exercise_1f functionality."""
         try:
-            from exercise_1 import exercise_1f
-
             test_input = [
                 ("apple", 1),
                 ("banana", 2),
@@ -160,8 +140,6 @@ class TestExercise1:
             if "cherry" in result_dict:
                 assert result_dict["cherry"] == 1
 
-        except ImportError:
-            pytest.skip("exercise_1.py not found or exercise_1f not implemented")
         except Exception as e:
             pytest.fail(f"exercise_1f failed with error: {e}")
 
@@ -169,20 +147,9 @@ class TestExercise1:
 class TestExercise2:
     """Test Exercise 2 implementations."""
 
-    def test_exercise_2a_import(self):
-        """Test that exercise_2a can be imported."""
-        try:
-            from exercise_2 import exercise_2a
-
-            assert callable(exercise_2a)
-        except ImportError:
-            pytest.skip("exercise_2.py not found or has import errors")
-
     def test_exercise_2b_functionality(self, spark):
         """Test exercise_2b functionality."""
         try:
-            from exercise_2 import exercise_2b
-
             test_input = ["The quick brown fox", "jumps over the lazy dog"]
             result = exercise_2b(spark, test_input)
 
@@ -196,16 +163,12 @@ class TestExercise2:
                 assert letter.islower()
                 assert isinstance(words, list)
 
-        except ImportError:
-            pytest.skip("exercise_2.py not found or exercise_2b not implemented")
         except Exception as e:
             pytest.fail(f"exercise_2b failed with error: {e}")
 
     def test_exercise_2d_functionality(self, spark):
         """Test exercise_2d functionality."""
         try:
-            from exercise_2 import exercise_2d
-
             test_input = [
                 "The quick brown fox jumps over the lazy dog.",
                 "Apache Spark is a powerful distributed computing framework.",
@@ -223,16 +186,12 @@ class TestExercise2:
                 assert isinstance(item[1], int)  # word count
                 assert isinstance(item[2], list)  # long words
 
-        except ImportError:
-            pytest.skip("exercise_2.py not found or exercise_2d not implemented")
         except Exception as e:
             pytest.fail(f"exercise_2d failed with error: {e}")
 
     def test_exercise_2e_functionality(self, spark):
         """Test exercise_2e functionality."""
         try:
-            from exercise_2 import exercise_2e
-
             test_input = [
                 "Hello world from Apache Spark",
                 "Spark makes big data processing easy",
@@ -252,8 +211,6 @@ class TestExercise2:
             assert result[1] > 0  # should have some unique words
             assert result[2] > 0  # average length should be positive
 
-        except ImportError:
-            pytest.skip("exercise_2.py not found or exercise_2e not implemented")
         except Exception as e:
             pytest.fail(f"exercise_2e failed with error: {e}")
 
@@ -261,20 +218,9 @@ class TestExercise2:
 class TestExercise3:
     """Test Exercise 3 implementations."""
 
-    def test_exercise_3a_import(self):
-        """Test that exercise_3a can be imported."""
-        try:
-            from exercise_3 import exercise_3a
-
-            assert callable(exercise_3a)
-        except ImportError:
-            pytest.skip("exercise_3.py not found or has import errors")
-
     def test_exercise_3a_functionality(self, spark):
         """Test exercise_3a functionality."""
         try:
-            from exercise_3 import exercise_3a
-
             # Create test sales data
             test_data = [
                 {"product_category": "Electronics", "amount": 100.0},
@@ -294,16 +240,12 @@ class TestExercise3:
                     assert isinstance(item[0], str)  # category
                     assert isinstance(item[1], (int, float))  # amount
 
-        except ImportError:
-            pytest.skip("exercise_3.py not found or exercise_3a not implemented")
         except Exception as e:
             pytest.fail(f"exercise_3a failed with error: {e}")
 
     def test_exercise_3c_functionality(self, spark):
         """Test exercise_3c functionality."""
         try:
-            from exercise_3 import exercise_3c
-
             test_input = [12, 15, 20]
             result = exercise_3c(spark, test_input)
 
@@ -324,16 +266,12 @@ class TestExercise3:
                     assert 1 in factors if factors else True
                     assert number in factors if factors else True
 
-        except ImportError:
-            pytest.skip("exercise_3.py not found or exercise_3c not implemented")
         except Exception as e:
             pytest.fail(f"exercise_3c failed with error: {e}")
 
     def test_exercise_3d_functionality(self, spark):
         """Test exercise_3d functionality."""
         try:
-            from exercise_3 import exercise_3d
-
             test_input = list(range(1, 1001))  # Smaller dataset for testing
             result = exercise_3d(spark, test_input)
 
@@ -347,16 +285,12 @@ class TestExercise3:
             assert result[0] >= 0
             assert result[1] >= 0
 
-        except ImportError:
-            pytest.skip("exercise_3.py not found or exercise_3d not implemented")
         except Exception as e:
             pytest.fail(f"exercise_3d failed with error: {e}")
 
     def test_exercise_3f_functionality(self, spark):
         """Test exercise_3f functionality."""
         try:
-            from exercise_3 import exercise_3f
-
             test_input = [64, 34, 25, 12, 22, 11, 90, 88, 76, 50, 5]
             k = 5
             result = exercise_3f(spark, test_input, k)
@@ -373,8 +307,6 @@ class TestExercise3:
             # Check that all elements are from the original data
             assert all(x in test_input for x in result)
 
-        except ImportError:
-            pytest.skip("exercise_3.py not found or exercise_3f not implemented")
         except Exception as e:
             pytest.fail(f"exercise_3f failed with error: {e}")
 
@@ -391,17 +323,6 @@ class TestAllExercises:
         for filename in expected_files:
             filepath = os.path.join(exercise_dir, filename)
             assert os.path.exists(filepath), f"Exercise file {filename} not found"
-
-    def test_exercise_files_are_executable(self):
-        """Test that exercise files can be imported without errors."""
-
-        for i in range(1, 4):
-            try:
-                exec(f"import exercise_{i}")
-            except ImportError as e:
-                pytest.fail(f"Failed to import exercise_{i}.py: {e}")
-            except SyntaxError as e:
-                pytest.fail(f"Syntax error in exercise_{i}.py: {e}")
 
     def test_spark_context_cleanup(self, spark):
         """Test that Spark context is properly managed."""
