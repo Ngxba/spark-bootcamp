@@ -25,8 +25,8 @@ class CustomerSchema:
         """
         return StructType(
             [
-                StructField("customer_id", StringType(), False),
-                StructField("customer_name", StringType(), False),
+                StructField("customer_id", StringType(), True),
+                StructField("customer_name", StringType(), True),
                 StructField("age", IntegerType(), True),
                 StructField("gender", StringType(), True),
                 StructField("city", StringType(), True),
@@ -44,8 +44,8 @@ class CustomerSchema:
         """
         return StructType(
             [
-                StructField("customer_id", StringType(), False),
-                StructField("customer_name", StringType(), False),
+                StructField("customer_id", StringType(), True),
+                StructField("customer_name", StringType(), True),
                 StructField("age", IntegerType(), True),
                 StructField("gender", StringType(), True),
                 StructField("city", StringType(), True),

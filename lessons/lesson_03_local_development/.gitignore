@@ -1,0 +1,365 @@
+# Spark Bootcamp Project - Global .gitignore
+# =============================================
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+.venv/
+.env/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+spark-bootcamp-env/
+
+# Environment Variables & Configuration
+.env
+.env.local
+.env.*.local
+*.env
+config.local.yml
+secrets.yml
+
+# Package Managers
+# uv
+.uv/
+uv.lock
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# conda
+.conda/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+.jupyter/
+jupyter_notebook_config.py
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Type Checking
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.pyre/
+.pytype/
+
+# Linting
+.flake8
+.pylintrc
+
+# Apache Spark
+*.log
+metastore_db/
+derby.log
+spark-warehouse/
+warehouse/
+spark-events/
+eventLogs/
+checkpoints/
+
+# Spark temporary files
+.spark-staging/
+spark-*.jar
+*.parquet
+*.delta
+
+# Hadoop
+.hadoop/
+hadoop-*.log
+
+# Big Data File Formats
+*.parquet/
+*.delta/
+*.orc/
+*.avro
+
+# Data Files (keep sample data, ignore large datasets)
+datasets/raw/
+datasets/processed/
+datasets/temp/
+data/raw/
+data/processed/
+data/temp/
+data/output/
+data/cache/
+
+# But keep sample/demo data
+!data/sample*
+!data/demo*
+!data/examples/
+!datasets/sample*
+!datasets/demo*
+!datasets/examples/
+
+# Output and Results
+output/
+results/
+reports/
+logs/
+tmp/
+temp/
+
+# IDEs and Editors
+# VSCode
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA / PyCharm
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# Docker
+.dockerignore
+Dockerfile.local
+docker-compose.override.yml
+.docker/
+
+# Kubernetes
+*.kubeconfig
+kubeconfig*
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.terraform/
+.terraform.lock.hcl
+
+# AWS
+.aws/
+*.pem
+
+# Google Cloud
+.gcloud/
+*-key.json
+service-account*.json
+
+# Azure
+.azure/
+
+# Certificates and Keys
+*.key
+*.crt
+*.pem
+*.p12
+*.pfx
+id_rsa*
+id_dsa*
+id_ecdsa*
+id_ed25519*
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Monitoring and Profiling
+.prof
+*.prof
+*.pstats
+
+# Documentation Build
+docs/_build/
+docs/.doctrees/
+site/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+*.save
+
+# Archive files
+*.tar
+*.tar.gz
+*.tgz
+*.zip
+*.rar
+*.7z
+
+# Node.js (if using any JS tools)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn/
+
+# R (if using R alongside Python)
+.RData
+.Rhistory
+.Rapp.history
+.RProfile
+
+# Scala (for Spark Scala lessons)
+target/
+.bloop/
+.metals/
+.vscode/metals.log
+
+# SBT
+project/target/
+project/project/
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+gradle-app.setting
+!gradle-wrapper.jar
+!gradle-wrapper.properties
+
+# Lesson-specific ignores
+*/solutions/.completed
+*/exercises/.completed
+*/checkpoints/
+*/student-work/
+
+# Cache directories
+.cache/
+.pytest_cache/
+.ruff_cache/
+
+# Performance and memory dumps
+*.hprof
+*.dump
+heapdump*
+javacore*
+
+# Temporary Spark UI data
+ui-data/
+
+# JupyterLab
+.jupyter-lab/
+
+# Lessons progress tracking (student-specific)
+.progress/
+progress.json
+student-progress.yml
+
+# Bootcamp administration files
+attendance/
+grades/
+student-submissions/
+
+# Local development overrides
+docker-compose.local.yml
+Makefile.local
+local-config.yml
+
+*.csv

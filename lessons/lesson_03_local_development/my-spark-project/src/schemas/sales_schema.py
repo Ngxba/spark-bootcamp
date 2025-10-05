@@ -32,14 +32,14 @@ class SalesSchema:
         """
         return StructType(
             [
-                StructField("transaction_id", StringType(), False),
-                StructField("customer_id", StringType(), False),
-                StructField("product_id", StringType(), False),
-                StructField("quantity", IntegerType(), False),
-                StructField("unit_price", DoubleType(), False),
-                StructField("total_amount", DoubleType(), False),
+                StructField("transaction_id", StringType(), True),
+                StructField("customer_id", StringType(), True),
+                StructField("product_id", StringType(), True),
+                StructField("quantity", IntegerType(), True),
+                StructField("unit_price", DoubleType(), True),
+                StructField("total_amount", DoubleType(), True),
                 StructField(
-                    "transaction_date", StringType(), False
+                    "transaction_date", StringType(), True
                 ),  # String initially, converted to DateType in cleaning
             ]
         )
@@ -55,13 +55,13 @@ class SalesSchema:
         return StructType(
             [
                 # Sales fields
-                StructField("transaction_id", StringType(), False),
-                StructField("customer_id", StringType(), False),
-                StructField("product_id", StringType(), False),
-                StructField("quantity", IntegerType(), False),
-                StructField("unit_price", DoubleType(), False),
-                StructField("total_amount", DoubleType(), False),
-                StructField("transaction_date", DateType(), False),
+                StructField("transaction_id", StringType(), True),
+                StructField("customer_id", StringType(), True),
+                StructField("product_id", StringType(), True),
+                StructField("quantity", IntegerType(), True),
+                StructField("unit_price", DoubleType(), True),
+                StructField("total_amount", DoubleType(), True),
+                StructField("transaction_date", DateType(), True),
                 # Customer fields
                 StructField("customer_name", StringType(), True),
                 StructField("age", IntegerType(), True),

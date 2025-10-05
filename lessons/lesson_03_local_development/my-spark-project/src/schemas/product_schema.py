@@ -33,11 +33,11 @@ class ProductSchema:
         """
         return StructType(
             [
-                StructField("product_id", StringType(), False),
-                StructField("product_name", StringType(), False),
-                StructField("category", StringType(), False),
+                StructField("product_id", StringType(), True),
+                StructField("product_name", StringType(), True),
+                StructField("category", StringType(), True),
                 StructField("brand", StringType(), True),
-                StructField("price", DoubleType(), False),
+                StructField("price", DoubleType(), True),
                 StructField("supplier", StringType(), True),
             ]
         )
@@ -52,13 +52,13 @@ class ProductSchema:
         """
         return StructType(
             [
-                StructField("product_id", StringType(), False),
-                StructField("product_name", StringType(), False),
+                StructField("product_id", StringType(), True),
+                StructField("product_name", StringType(), True),
                 StructField("description", StringType(), True),
-                StructField("category", StringType(), False),
+                StructField("category", StringType(), True),
                 StructField("subcategory", StringType(), True),
                 StructField("brand", StringType(), True),
-                StructField("price", DoubleType(), False),
+                StructField("price", DoubleType(), True),
                 StructField("cost", DoubleType(), True),
                 StructField("supplier", StringType(), True),
                 StructField("supplier_contact", StringType(), True),
@@ -82,9 +82,9 @@ class ProductSchema:
         """
         return StructType(
             [
-                StructField("product_id", StringType(), False),
-                StructField("warehouse_id", StringType(), False),
-                StructField("stock_quantity", IntegerType(), False),
+                StructField("product_id", StringType(), True),
+                StructField("warehouse_id", StringType(), True),
+                StructField("stock_quantity", IntegerType(), True),
                 StructField("reserved_quantity", IntegerType(), True),
                 StructField("available_quantity", IntegerType(), True),
                 StructField("reorder_level", IntegerType(), True),

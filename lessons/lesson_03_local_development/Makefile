@@ -1,7 +1,7 @@
 # Makefile for Spark Bootcamp Lesson 3 - Local Development Setup
 # Provides convenient commands for development workflow and project management
 
-.PHONY: help setup install install-dev clean test test-exercises test-structure test-coverage lint format check-format check-lint type-check create-etl-project create-streaming-project create-analysis-project run-exercise-1 run-exercise-2 run-exercise-3 run-exercise-4 run-exercise-5 run-exercises run-solutions notebook lab verify-spark verify-setup validate-structure validate-workflow validate-config validate-tools check-env quick-start dev-setup docker-build docker-up docker-down
+.PHONY: help setup install install-dev clean run-my-spark-project create-etl-project create-streaming-project create-analysis-project notebook lab verify-spark verify-setup validate-structure validate-workflow validate-config validate-tools check-env quick-start dev-setup qa validate-learning all
 
 # Colors for output
 RED=\033[0;31m
@@ -57,10 +57,10 @@ clean: ## Clean up generated files
 	rm -rf templates/*/build templates/*/dist
 	@echo "$(GREEN)Cleanup complete!$(NC)"
 
-test: ## Run Python files (no test framework installed)
-	@echo "$(YELLOW)Running exercise files for validation...$(NC)"
-	uv run python exercises/exercise_1.py
-	@echo "$(GREEN)Exercise validation completed!$(NC)"
+run-my-spark-project: ## Run my-spark-project ETL job
+	@echo "$(YELLOW)Running my-spark-project ETL job...$(NC)"
+	cd my-spark-project && uv run python main.py
+	@echo "$(GREEN)my-spark-project execution completed!$(NC)"
 
 # Project Template Creation Commands
 create-etl-project: ## Create ETL project from template
@@ -81,49 +81,7 @@ create-analysis-project: ## Create analysis project from template
 	uv run python scripts/create_project.py --template analysis --name "$$name"
 	@echo "$(GREEN)Analysis project created successfully!$(NC)"
 
-# Exercise Commands
-run-exercise-1: ## Run Exercise 1 - Production Project Template
-	@echo "$(YELLOW)Running Exercise 1 - Production Project Template...$(NC)"
-	uv run python exercises/exercise_1.py
-	@echo "$(GREEN)Exercise 1 completed!$(NC)"
-
-run-exercise-2: ## Run Exercise 2 - Modular Refactoring
-	@echo "$(YELLOW)Running Exercise 2 - Modular Refactoring...$(NC)"
-	uv run python exercises/exercise_2.py
-	@echo "$(GREEN)Exercise 2 completed!$(NC)"
-
-run-exercise-3: ## Run Exercise 3 - Multi-Environment Setup
-	@echo "$(YELLOW)Running Exercise 3 - Multi-Environment Setup...$(NC)"
-	uv run python exercises/exercise_3.py
-	@echo "$(GREEN)Exercise 3 completed!$(NC)"
-
-run-exercise-4: ## Run Exercise 4 - Testing Framework
-	@echo "$(YELLOW)Running Exercise 4 - Testing Framework...$(NC)"
-	uv run python exercises/exercise_4.py
-	@echo "$(GREEN)Exercise 4 completed!$(NC)"
-
-run-exercise-5: ## Run Exercise 5 - Development Pipeline
-	@echo "$(YELLOW)Running Exercise 5 - Development Pipeline...$(NC)"
-	uv run python exercises/exercise_5.py
-	@echo "$(GREEN)Exercise 5 completed!$(NC)"
-
-run-exercises: ## Run all exercises
-	@echo "$(YELLOW)Running all development setup exercises...$(NC)"
-	$(MAKE) run-exercise-1
-	$(MAKE) run-exercise-2
-	$(MAKE) run-exercise-3
-	$(MAKE) run-exercise-4
-	$(MAKE) run-exercise-5
-	@echo "$(GREEN)All exercises completed!$(NC)"
-
-run-solutions: ## Run all solution files
-	@echo "$(YELLOW)Running solution demonstrations...$(NC)"
-	uv run python solutions/exercise_1_solution.py
-	uv run python solutions/exercise_2_solution.py
-	uv run python solutions/exercise_3_solution.py
-	uv run python solutions/exercise_4_solution.py
-	uv run python solutions/exercise_5_solution.py
-	@echo "$(GREEN)All solutions demonstrated!$(NC)"
+# Project Commands
 
 notebook: ## Start Jupyter notebook
 	@echo "$(YELLOW)Starting Jupyter notebook...$(NC)"
@@ -171,11 +129,6 @@ validate-tools: ## Validate tools integration
 	uv run python scripts/validate_tools.py
 	@echo "$(GREEN)Tools validation completed!$(NC)"
 
-shell: ## Start a shell with the virtual environment activated (using uv)
-	@echo "$(YELLOW)Starting shell with virtual environment...$(NC)"
-	@echo "$(BLUE)Type 'exit' to return to your normal shell$(NC)"
-	uv run bash || uv run sh
-
 env-info: ## Show virtual environment information
 	@echo "$(YELLOW)Virtual Environment Information:$(NC)"
 	@echo "Location: $(PWD)/.venv"
@@ -199,32 +152,11 @@ check-env: ## Check environment setup
 	uv pip list | head -15
 	@echo "Git status:"
 	git --version
-	@echo "Docker status:"
-	docker --version || echo "$(YELLOW)Docker not installed$(NC)"
 	@echo "$(GREEN)Environment check completed!$(NC)"
-
-# Docker Commands
-docker-build: ## Build Docker development environment
-	@echo "$(YELLOW)Building Docker development environment...$(NC)"
-	docker build -t spark-lesson-03:latest .
-	@echo "$(GREEN)Docker build completed!$(NC)"
-
-docker-up: ## Start Docker development environment
-	@echo "$(YELLOW)Starting Docker development environment...$(NC)"
-	docker-compose up -d
-	@echo "$(GREEN)Docker environment started!$(NC)"
-	@echo "$(BLUE)Access Jupyter at: http://localhost:8888$(NC)"
-	@echo "$(BLUE)Access Spark UI at: http://localhost:4040$(NC)"
-
-docker-down: ## Stop Docker development environment
-	@echo "$(YELLOW)Stopping Docker development environment...$(NC)"
-	docker-compose down
-	@echo "$(GREEN)Docker environment stopped!$(NC)"
 
 # Quality Assurance
 qa: ## Run basic validation
 	@echo "$(YELLOW)Running basic validation...$(NC)"
-	$(MAKE) test
 	@echo "$(GREEN)Validation completed!$(NC)"
 
 quick-start: ## Quick start - setup and run basic validation
@@ -253,4 +185,4 @@ validate-learning: ## Validate all learning objectives
 	@echo "$(GREEN)Learning validation completed!$(NC)"
 
 # Default target
-all: setup install verify-setup test ## Run complete setup and validation
+all: setup install verify-setup ## Run complete setup and validation

@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 
 # Add src to path for imports
-sys.path.append(str(Path(__file__).parent.parent / "src"))
+sys.path.append(str(Path(__file__).parent.parent))
 
 from src.jobs.etl_job import ETLJob
 from src.utils.file_utils import FileUtils
