@@ -19,16 +19,18 @@ Learning Goals:
 Run this file: python exercise_1.py
 """
 
-from pyspark.sql import SparkSession
 from typing import List, Tuple
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise1-BasicRDDOperations") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise1-BasicRDDOperations")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_1a(spark: SparkSession, numbers: List[int]) -> List[int]:
@@ -51,8 +53,6 @@ def exercise_1a(spark: SparkSession, numbers: List[int]) -> List[int]:
     # 2. Filter for even numbers (hint: use lambda x: x % 2 == 0)
     # 3. Collect and return the results
 
-    pass
-
 
 def exercise_1b(spark: SparkSession, words: List[str]) -> int:
     """
@@ -74,8 +74,6 @@ def exercise_1b(spark: SparkSession, words: List[str]) -> int:
     # 2. Map each word to its length using len()
     # 3. Sum all lengths using reduce() or sum()
 
-    pass
-
 
 def exercise_1c(spark: SparkSession, data: List[int]) -> Tuple[int, int, float]:
     """
@@ -96,8 +94,6 @@ def exercise_1c(spark: SparkSession, data: List[int]) -> Tuple[int, int, float]:
     # 1. Create RDD from data list
     # 2. Use RDD actions to calculate count, sum
     # 3. Calculate average and return as tuple
-
-    pass
 
 
 def exercise_1d(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, int]]:
@@ -123,10 +119,10 @@ def exercise_1d(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, in
     # 5. Use reduceByKey to count occurrences
     # 6. Sort by key and collect results
 
-    pass
 
-
-def exercise_1e(spark: SparkSession, numbers: List[int], num_partitions: int) -> List[List[int]]:
+def exercise_1e(
+    spark: SparkSession, numbers: List[int], num_partitions: int
+) -> List[List[int]]:
     """
     Create an RDD with specified number of partitions and return the partition contents.
 
@@ -147,10 +143,10 @@ def exercise_1e(spark: SparkSession, numbers: List[int], num_partitions: int) ->
     # 2. Use glom() to get partition contents
     # 3. Collect and return the results
 
-    pass
 
-
-def exercise_1f(spark: SparkSession, pairs: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
+def exercise_1f(
+    spark: SparkSession, pairs: List[Tuple[str, int]]
+) -> List[Tuple[str, int]]:
     """
     Work with key-value pairs: group by key and sum the values.
 
@@ -170,8 +166,6 @@ def exercise_1f(spark: SparkSession, pairs: List[Tuple[str, int]]) -> List[Tuple
     # 2. Use reduceByKey to sum values for each key
     # 3. Sort by key and collect results
 
-    pass
-
 
 def run_exercises():
     """Run all exercises and display results."""
@@ -186,8 +180,8 @@ def run_exercises():
     result_1a = exercise_1a(spark, test_numbers)
     print(f"Input: {test_numbers}")
     print(f"Output: {result_1a}")
-    print(f"Expected: [2, 4, 6, 8, 10]")
-    print(f"✅ Correct!" if result_1a == [2, 4, 6, 8, 10] else "❌ Incorrect")
+    print("Expected: [2, 4, 6, 8, 10]")
+    print("✅ Correct!" if result_1a == [2, 4, 6, 8, 10] else "❌ Incorrect")
 
     # Test Exercise 1b
     print("\n📝 Exercise 1b: Count Characters")
@@ -195,8 +189,8 @@ def run_exercises():
     result_1b = exercise_1b(spark, test_words)
     print(f"Input: {test_words}")
     print(f"Output: {result_1b}")
-    print(f"Expected: 20")
-    print(f"✅ Correct!" if result_1b == 20 else "❌ Incorrect")
+    print("Expected: 20")
+    print("✅ Correct!" if result_1b == 20 else "❌ Incorrect")
 
     # Test Exercise 1c
     print("\n📝 Exercise 1c: Calculate Statistics")
@@ -204,8 +198,8 @@ def run_exercises():
     result_1c = exercise_1c(spark, test_data)
     print(f"Input: {test_data}")
     print(f"Output: {result_1c}")
-    print(f"Expected: (10, 55, 5.5)")
-    print(f"✅ Correct!" if result_1c == (10, 55, 5.5) else "❌ Incorrect")
+    print("Expected: (10, 55, 5.5)")
+    print("✅ Correct!" if result_1c == (10, 55, 5.5) else "❌ Incorrect")
 
     # Test Exercise 1d
     print("\n📝 Exercise 1d: Word Count")
@@ -215,7 +209,7 @@ def run_exercises():
     print(f"Output: {result_1d}")
     expected_1d = [("hello", 2), ("of", 1), ("spark", 2), ("world", 2)]
     print(f"Expected: {expected_1d}")
-    print(f"✅ Correct!" if result_1d == expected_1d else "❌ Incorrect")
+    print("✅ Correct!" if result_1d == expected_1d else "❌ Incorrect")
 
     # Test Exercise 1e
     print("\n📝 Exercise 1e: Partition Contents")
@@ -223,23 +217,33 @@ def run_exercises():
     result_1e = exercise_1e(spark, test_nums, 3)
     print(f"Input: {test_nums}, partitions: 3")
     print(f"Output: {result_1e}")
-    print(f"Expected: 3 partitions with all numbers distributed")
+    print("Expected: 3 partitions with all numbers distributed")
     total_elements = sum(len(partition) for partition in result_1e)
-    print(f"✅ Correct!" if len(result_1e) == 3 and total_elements == 6 else "❌ Incorrect")
+    print(
+        "✅ Correct!" if len(result_1e) == 3 and total_elements == 6 else "❌ Incorrect"
+    )
 
     # Test Exercise 1f
     print("\n📝 Exercise 1f: Key-Value Pairs")
-    test_pairs = [("apple", 1), ("banana", 2), ("apple", 3), ("cherry", 1), ("banana", 4)]
+    test_pairs = [
+        ("apple", 1),
+        ("banana", 2),
+        ("apple", 3),
+        ("cherry", 1),
+        ("banana", 4),
+    ]
     result_1f = exercise_1f(spark, test_pairs)
     print(f"Input: {test_pairs}")
     print(f"Output: {result_1f}")
     expected_1f = [("apple", 4), ("banana", 6), ("cherry", 1)]
     print(f"Expected: {expected_1f}")
-    print(f"✅ Correct!" if result_1f == expected_1f else "❌ Incorrect")
+    print("✅ Correct!" if result_1f == expected_1f else "❌ Incorrect")
 
     spark.stop()
     print("\n🎉 Exercise 1 completed!")
-    print("💡 If you got any incorrect answers, review your implementation and try again.")
+    print(
+        "💡 If you got any incorrect answers, review your implementation and try again."
+    )
     print("📚 Ready to move on to Exercise 2!")
 
 

@@ -6,7 +6,6 @@ These tests validate the quality and integrity of sample datasets.
 """
 
 import pytest
-from pyspark.sql import SparkSession
 from datasets.sample_data import SampleDataGenerator, get_all_datasets
 
 
@@ -84,7 +83,9 @@ class TestSampleDataGenerator:
 
         # All order customer IDs should reference valid customers
         invalid_refs = order_customer_ids - customer_ids
-        assert len(invalid_refs) == 0, f"Orders reference non-existent customers: {invalid_refs}"
+        assert (
+            len(invalid_refs) == 0
+        ), f"Orders reference non-existent customers: {invalid_refs}"
 
     def test_time_series_data_consistency(self, data_generator):
         """Test time series data has consistent date progression."""
@@ -115,16 +116,30 @@ class TestDatasetIntegration:
 
         # Test each dataset type
         datasets_to_test = [
-            ("employees", generator.get_employee_data(), ["name", "age", "department", "salary"]),
-            ("products", generator.get_product_catalog(), ["id", "name", "category", "price", "stock"]),
-            ("customers", generator.get_customer_data(), ["id", "name", "email", "phone", "age"]),
+            (
+                "employees",
+                generator.get_employee_data(),
+                ["name", "age", "department", "salary"],
+            ),
+            (
+                "products",
+                generator.get_product_catalog(),
+                ["id", "name", "category", "price", "stock"],
+            ),
+            (
+                "customers",
+                generator.get_customer_data(),
+                ["id", "name", "email", "phone", "age"],
+            ),
         ]
 
         for name, data, columns in datasets_to_test:
             try:
                 df = spark.createDataFrame(data, columns)
                 assert df.count() > 0, f"Dataset {name} should have records"
-                assert len(df.columns) == len(columns), f"Dataset {name} should have correct columns"
+                assert len(df.columns) == len(
+                    columns
+                ), f"Dataset {name} should have correct columns"
             except Exception as e:
                 pytest.fail(f"Failed to create DataFrame for {name}: {e}")
 
@@ -135,8 +150,12 @@ class TestDatasetIntegration:
         # Test customer-order join
         customers, orders = generator.get_customer_order_data()
 
-        customers_df = spark.createDataFrame(customers, ["customer_id", "name", "city", "age"])
-        orders_df = spark.createDataFrame(orders, ["order_id", "customer_id", "amount", "status"])
+        customers_df = spark.createDataFrame(
+            customers, ["customer_id", "name", "city", "age"]
+        )
+        orders_df = spark.createDataFrame(
+            orders, ["order_id", "customer_id", "amount", "status"]
+        )
 
         # Perform join
         joined = customers_df.join(orders_df, "customer_id", "inner")
@@ -151,7 +170,9 @@ class TestDatasetIntegration:
 
         # Test sales data aggregation
         sales_data = generator.get_regional_sales_data()
-        df = spark.createDataFrame(sales_data, ["category", "region", "amount", "quantity"])
+        df = spark.createDataFrame(
+            sales_data, ["category", "region", "amount", "quantity"]
+        )
 
         # Test groupBy aggregation
         result = df.groupBy("category").agg({"amount": "sum", "quantity": "avg"})
@@ -186,7 +207,9 @@ class TestDataQuality:
         for name, age, department, salary in employees:
             assert 18 <= age <= 70, f"Age {age} should be realistic"
             assert 30000 <= salary <= 200000, f"Salary {salary} should be realistic"
-            assert len(name.split()) >= 2, "Name should have at least first and last name"
+            assert (
+                len(name.split()) >= 2
+            ), "Name should have at least first and last name"
 
         # Test product data
         products = data_generator.get_product_catalog()
@@ -219,7 +242,7 @@ class TestGetAllDatasets:
         assert len(datasets) > 0, "Should have datasets"
 
         # Check some expected keys
-        expected_keys = ['employees', 'products', 'customers', 'analytics_sales']
+        expected_keys = ["employees", "products", "customers", "analytics_sales"]
         for key in expected_keys:
             assert key in datasets, f"Should have {key} dataset"
 
@@ -243,10 +266,16 @@ class TestGetAllDatasets:
             if isinstance(data, tuple):
                 # Multi-dataset case (like customer_orders)
                 for sub_data in data:
-                    assert isinstance(sub_data, list), f"Sub-dataset in {name} should be list"
+                    assert isinstance(
+                        sub_data, list
+                    ), f"Sub-dataset in {name} should be list"
                     if sub_data:  # If not empty
-                        assert isinstance(sub_data[0], tuple), f"Records in {name} should be tuples"
+                        assert isinstance(
+                            sub_data[0], tuple
+                        ), f"Records in {name} should be tuples"
             else:
                 assert isinstance(data, list), f"Dataset {name} should be list"
                 if data:  # If not empty
-                    assert isinstance(data[0], tuple), f"Records in {name} should be tuples"
+                    assert isinstance(
+                        data[0], tuple
+                    ), f"Records in {name} should be tuples"

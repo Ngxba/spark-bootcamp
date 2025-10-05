@@ -20,18 +20,19 @@ Learning Goals:
 Run this file: python exercise_7.py
 """
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, avg, sum as spark_sum, count, when
 import time
 from typing import List, Tuple
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise7-PerformanceComparison") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise7-PerformanceComparison")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float, float]:
@@ -51,10 +52,11 @@ def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float,
     # 1. Create RDD using spark.sparkContext.parallelize()
     # 2. Use map() and reduce() operations to calculate statistics
     # 3. Return (count, avg_age, avg_salary)
-    pass
 
 
-def exercise_7a_dataframe(spark: SparkSession, data: List[tuple]) -> Tuple[int, float, float]:
+def exercise_7a_dataframe(
+    spark: SparkSession, data: List[tuple]
+) -> Tuple[int, float, float]:
     """
     Calculate statistics using DataFrame approach (Lesson 2 style).
 
@@ -71,10 +73,11 @@ def exercise_7a_dataframe(spark: SparkSession, data: List[tuple]) -> Tuple[int, 
     # 1. Create DataFrame using spark.createDataFrame()
     # 2. Use DataFrame aggregation functions
     # 3. Return (count, avg_age, avg_salary)
-    pass
 
 
-def exercise_7b_rdd(spark: SparkSession, data: List[tuple]) -> List[Tuple[str, int, float]]:
+def exercise_7b_rdd(
+    spark: SparkSession, data: List[tuple]
+) -> List[Tuple[str, int, float]]:
     """
     Group by department and calculate statistics using RDD.
 
@@ -91,10 +94,11 @@ def exercise_7b_rdd(spark: SparkSession, data: List[tuple]) -> List[Tuple[str, i
     # 1. Create RDD and map to (department, salary) pairs
     # 2. Use groupByKey() or reduceByKey() for aggregation
     # 3. Calculate count and average for each department
-    pass
 
 
-def exercise_7b_dataframe(spark: SparkSession, data: List[tuple]) -> List[Tuple[str, int, float]]:
+def exercise_7b_dataframe(
+    spark: SparkSession, data: List[tuple]
+) -> List[Tuple[str, int, float]]:
     """
     Group by department and calculate statistics using DataFrame.
 
@@ -111,10 +115,11 @@ def exercise_7b_dataframe(spark: SparkSession, data: List[tuple]) -> List[Tuple[
     # 1. Create DataFrame
     # 2. Use groupBy().agg() for aggregation
     # 3. Collect and return results
-    pass
 
 
-def exercise_7c_rdd(spark: SparkSession, data1: List[tuple], data2: List[tuple]) -> List[tuple]:
+def exercise_7c_rdd(
+    spark: SparkSession, data1: List[tuple], data2: List[tuple]
+) -> List[tuple]:
     """
     Join two datasets using RDD operations.
 
@@ -133,10 +138,11 @@ def exercise_7c_rdd(spark: SparkSession, data1: List[tuple], data2: List[tuple])
     # 2. Convert to key-value pairs with id as key
     # 3. Use join() operation
     # 4. Transform result to desired format
-    pass
 
 
-def exercise_7c_dataframe(spark: SparkSession, data1: List[tuple], data2: List[tuple]) -> List[tuple]:
+def exercise_7c_dataframe(
+    spark: SparkSession, data1: List[tuple], data2: List[tuple]
+) -> List[tuple]:
     """
     Join two datasets using DataFrame operations.
 
@@ -154,7 +160,6 @@ def exercise_7c_dataframe(spark: SparkSession, data1: List[tuple], data2: List[t
     # 1. Create DataFrames from both datasets
     # 2. Use DataFrame join() operation
     # 3. Select and collect results
-    pass
 
 
 def exercise_7d_caching_comparison(spark: SparkSession, data: List[tuple]):
@@ -180,7 +185,6 @@ def exercise_7d_caching_comparison(spark: SparkSession, data: List[tuple]):
     # Test both RDD and DataFrame approaches with and without caching
     # Perform multiple operations (count, sum, filter) on the same data
     # Measure execution times for comparison
-    pass
 
 
 def exercise_7e_explain_plans(spark: SparkSession, data: List[tuple]):
@@ -205,7 +209,6 @@ def exercise_7e_explain_plans(spark: SparkSession, data: List[tuple]):
     # 1. Create DataFrame from data
     # 2. Perform different operations and capture explain() output
     # 3. Return plan information for analysis
-    pass
 
 
 def performance_benchmark(spark: SparkSession):
@@ -216,8 +219,10 @@ def performance_benchmark(spark: SparkSession):
     print("=" * 50)
 
     # Generate larger test dataset
-    large_data = [(f"Person_{i}", 20 + (i % 40), f"Dept_{i % 5}", 40000 + (i * 100) % 50000)
-                  for i in range(10000)]
+    large_data = [
+        (f"Person_{i}", 20 + (i % 40), f"Dept_{i % 5}", 40000 + (i * 100) % 50000)
+        for i in range(10000)
+    ]
 
     print(f"\nTesting with {len(large_data)} records...")
 
@@ -232,7 +237,7 @@ def performance_benchmark(spark: SparkSession):
         print(f"RDD approach: {rdd_time:.3f}s, Result: {result_rdd}")
     except Exception as e:
         print(f"RDD approach failed: {e}")
-        rdd_time = float('inf')
+        rdd_time = float("inf")
 
     # DataFrame approach
     start_time = time.time()
@@ -242,9 +247,9 @@ def performance_benchmark(spark: SparkSession):
         print(f"DataFrame approach: {df_time:.3f}s, Result: {result_df}")
     except Exception as e:
         print(f"DataFrame approach failed: {e}")
-        df_time = float('inf')
+        df_time = float("inf")
 
-    if rdd_time != float('inf') and df_time != float('inf'):
+    if rdd_time != float("inf") and df_time != float("inf"):
         speedup = rdd_time / df_time
         print(f"DataFrame speedup: {speedup:.2f}x")
 
@@ -259,7 +264,7 @@ def performance_benchmark(spark: SparkSession):
         print(f"RDD approach: {rdd_time:.3f}s, {len(result_rdd)} groups")
     except Exception as e:
         print(f"RDD approach failed: {e}")
-        rdd_time = float('inf')
+        rdd_time = float("inf")
 
     # DataFrame approach
     start_time = time.time()
@@ -269,9 +274,9 @@ def performance_benchmark(spark: SparkSession):
         print(f"DataFrame approach: {df_time:.3f}s, {len(result_df)} groups")
     except Exception as e:
         print(f"DataFrame approach failed: {e}")
-        df_time = float('inf')
+        df_time = float("inf")
 
-    if rdd_time != float('inf') and df_time != float('inf'):
+    if rdd_time != float("inf") and df_time != float("inf"):
         speedup = rdd_time / df_time
         print(f"DataFrame speedup: {speedup:.2f}x")
 
@@ -289,7 +294,7 @@ def run_exercises():
         ("Alice", 28, 85000),
         ("Bob", 34, 75000),
         ("Charlie", 29, 90000),
-        ("Diana", 31, 70000)
+        ("Diana", 31, 70000),
     ]
 
     try:
@@ -316,7 +321,7 @@ def run_exercises():
         ("Bob", "Engineering", 75000),
         ("Charlie", "Marketing", 70000),
         ("Diana", "Marketing", 72000),
-        ("Eve", "Sales", 68000)
+        ("Eve", "Sales", 68000),
     ]
 
     try:
@@ -374,7 +379,7 @@ def run_exercises():
     plan_data = [
         ("Alice", 28, "Engineering", 85000),
         ("Bob", 34, "Marketing", 75000),
-        ("Charlie", 29, "Engineering", 90000)
+        ("Charlie", 29, "Engineering", 90000),
     ]
 
     try:

@@ -8,22 +8,22 @@ These tests check that student solutions are working correctly.
 Run tests: python -m pytest test_exercises.py -v
 """
 
-import pytest
 import os
 import sys
+
+import pytest
 from pyspark.sql import SparkSession
 
 # Add the exercises directory to the Python path
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'exercises'))
+sys.path.append(os.path.join(os.path.dirname(__file__), "..", "exercises"))
 
 
 @pytest.fixture(scope="module")
 def spark():
     """Create a Spark session for testing."""
-    spark = SparkSession.builder \
-        .appName("TestExercises") \
-        .master("local[2]") \
-        .getOrCreate()
+    spark = (
+        SparkSession.builder.appName("TestExercises").master("local[2]").getOrCreate()
+    )
     yield spark
     spark.stop()
 
@@ -35,6 +35,7 @@ class TestExercise1:
         """Test that exercise_1a can be imported."""
         try:
             from exercise_1 import exercise_1a
+
             assert callable(exercise_1a)
         except ImportError:
             pytest.skip("exercise_1.py not found or has import errors")
@@ -100,8 +101,13 @@ class TestExercise1:
             # Check if result is a list of tuples
             assert isinstance(result, list)
             if result:  # Only check if result is not empty
-                assert all(isinstance(item, tuple) and len(item) == 2 for item in result)
-                assert all(isinstance(item[0], str) and isinstance(item[1], int) for item in result)
+                assert all(
+                    isinstance(item, tuple) and len(item) == 2 for item in result
+                )
+                assert all(
+                    isinstance(item[0], str) and isinstance(item[1], int)
+                    for item in result
+                )
 
         except ImportError:
             pytest.skip("exercise_1.py not found or exercise_1d not implemented")
@@ -135,7 +141,13 @@ class TestExercise1:
         try:
             from exercise_1 import exercise_1f
 
-            test_input = [("apple", 1), ("banana", 2), ("apple", 3), ("cherry", 1), ("banana", 4)]
+            test_input = [
+                ("apple", 1),
+                ("banana", 2),
+                ("apple", 3),
+                ("cherry", 1),
+                ("banana", 4),
+            ]
             result = exercise_1f(spark, test_input)
 
             # Convert to dict for easier checking
@@ -162,6 +174,7 @@ class TestExercise2:
         """Test that exercise_2a can be imported."""
         try:
             from exercise_2 import exercise_2a
+
             assert callable(exercise_2a)
         except ImportError:
             pytest.skip("exercise_2.py not found or has import errors")
@@ -196,7 +209,7 @@ class TestExercise2:
 
             test_input = [
                 "The quick brown fox jumps over the lazy dog.",
-                "Apache Spark is a powerful distributed computing framework."
+                "Apache Spark is a powerful distributed computing framework.",
             ]
             result = exercise_2d(spark, test_input)
 
@@ -224,7 +237,7 @@ class TestExercise2:
             test_input = [
                 "Hello world from Apache Spark",
                 "Spark makes big data processing easy",
-                "Hello again from the world of data"
+                "Hello again from the world of data",
             ]
             result = exercise_2e(spark, test_input)
 
@@ -253,6 +266,7 @@ class TestExercise3:
         """Test that exercise_3a can be imported."""
         try:
             from exercise_3 import exercise_3a
+
             assert callable(exercise_3a)
         except ImportError:
             pytest.skip("exercise_3.py not found or has import errors")
@@ -267,7 +281,7 @@ class TestExercise3:
                 {"product_category": "Electronics", "amount": 100.0},
                 {"product_category": "Books", "amount": 50.0},
                 {"product_category": "Electronics", "amount": 200.0},
-                {"product_category": "Books", "amount": 75.0}
+                {"product_category": "Books", "amount": 75.0},
             ]
 
             result = exercise_3a(spark, test_data)
@@ -371,13 +385,9 @@ class TestAllExercises:
 
     def test_all_exercise_files_exist(self):
         """Test that all exercise files exist."""
-        exercise_dir = os.path.join(os.path.dirname(__file__), '..', 'exercises')
+        exercise_dir = os.path.join(os.path.dirname(__file__), "..", "exercises")
 
-        expected_files = [
-            'exercise_1.py',
-            'exercise_2.py',
-            'exercise_3.py'
-        ]
+        expected_files = ["exercise_1.py", "exercise_2.py", "exercise_3.py"]
 
         for filename in expected_files:
             filepath = os.path.join(exercise_dir, filename)
@@ -385,7 +395,7 @@ class TestAllExercises:
 
     def test_exercise_files_are_executable(self):
         """Test that exercise files can be imported without errors."""
-        exercise_dir = os.path.join(os.path.dirname(__file__), '..', 'exercises')
+        os.path.join(os.path.dirname(__file__), "..", "exercises")
 
         for i in range(1, 4):
             try:

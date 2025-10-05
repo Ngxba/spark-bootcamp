@@ -6,20 +6,24 @@ This file contains the complete solutions for Exercise 7.
 Study these solutions to understand performance differences between DataFrames and RDDs.
 """
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, avg, sum as spark_sum, count, when
-import time
-from typing import List, Tuple
-from io import StringIO
 import sys
+import time
+from io import StringIO
+from typing import List, Tuple
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import avg, col, count
+from pyspark.sql.functions import sum as spark_sum
+from pyspark.sql.functions import when
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise7-Solutions") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise7-Solutions")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float, float]:
@@ -40,7 +44,9 @@ def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float,
     return (count_val, avg_age, avg_salary)
 
 
-def exercise_7a_dataframe(spark: SparkSession, data: List[tuple]) -> Tuple[int, float, float]:
+def exercise_7a_dataframe(
+    spark: SparkSession, data: List[tuple]
+) -> Tuple[int, float, float]:
     """Calculate statistics using DataFrame approach (Lesson 2 style)."""
     # Create DataFrame
     df = spark.createDataFrame(data, ["name", "age", "salary"])
@@ -49,13 +55,15 @@ def exercise_7a_dataframe(spark: SparkSession, data: List[tuple]) -> Tuple[int, 
     stats = df.agg(
         count("*").alias("count"),
         avg("age").alias("avg_age"),
-        avg("salary").alias("avg_salary")
+        avg("salary").alias("avg_salary"),
     ).collect()[0]
 
     return (stats["count"], stats["avg_age"], stats["avg_salary"])
 
 
-def exercise_7b_rdd(spark: SparkSession, data: List[tuple]) -> List[Tuple[str, int, float]]:
+def exercise_7b_rdd(
+    spark: SparkSession, data: List[tuple]
+) -> List[Tuple[str, int, float]]:
     """Group by department and calculate statistics using RDD."""
     # Create RDD
     rdd = spark.sparkContext.parallelize(data)
@@ -71,32 +79,40 @@ def exercise_7b_rdd(spark: SparkSession, data: List[tuple]) -> List[Tuple[str, i
         return (count, avg_salary)
 
     # Use groupByKey and mapValues for aggregation
-    dept_stats = dept_salary_pairs.groupByKey() \
-                                  .mapValues(calculate_dept_stats) \
-                                  .map(lambda x: (x[0], x[1][0], x[1][1]))  # (dept, count, avg)
+    dept_stats = (
+        dept_salary_pairs.groupByKey()
+        .mapValues(calculate_dept_stats)
+        .map(lambda x: (x[0], x[1][0], x[1][1]))
+    )  # (dept, count, avg)
 
     return dept_stats.collect()
 
 
-def exercise_7b_dataframe(spark: SparkSession, data: List[tuple]) -> List[Tuple[str, int, float]]:
+def exercise_7b_dataframe(
+    spark: SparkSession, data: List[tuple]
+) -> List[Tuple[str, int, float]]:
     """Group by department and calculate statistics using DataFrame."""
     # Create DataFrame
     df = spark.createDataFrame(data, ["name", "department", "salary"])
 
     # Group by department and calculate statistics
-    result = df.groupBy("department") \
-               .agg(
-                   count("*").alias("employee_count"),
-                   avg("salary").alias("average_salary")
-               ) \
-               .select("department", "employee_count", "average_salary") \
-               .collect()
+    result = (
+        df.groupBy("department")
+        .agg(count("*").alias("employee_count"), avg("salary").alias("average_salary"))
+        .select("department", "employee_count", "average_salary")
+        .collect()
+    )
 
     # Convert to list of tuples
-    return [(row["department"], row["employee_count"], row["average_salary"]) for row in result]
+    return [
+        (row["department"], row["employee_count"], row["average_salary"])
+        for row in result
+    ]
 
 
-def exercise_7c_rdd(spark: SparkSession, data1: List[tuple], data2: List[tuple]) -> List[tuple]:
+def exercise_7c_rdd(
+    spark: SparkSession, data1: List[tuple], data2: List[tuple]
+) -> List[tuple]:
     """Join two datasets using RDD operations."""
     # Create RDDs
     rdd1 = spark.sparkContext.parallelize(data1)  # (id, name)
@@ -115,16 +131,16 @@ def exercise_7c_rdd(spark: SparkSession, data1: List[tuple], data2: List[tuple])
     return result.collect()
 
 
-def exercise_7c_dataframe(spark: SparkSession, data1: List[tuple], data2: List[tuple]) -> List[tuple]:
+def exercise_7c_dataframe(
+    spark: SparkSession, data1: List[tuple], data2: List[tuple]
+) -> List[tuple]:
     """Join two datasets using DataFrame operations."""
     # Create DataFrames
     df1 = spark.createDataFrame(data1, ["id", "name"])
     df2 = spark.createDataFrame(data2, ["id", "salary"])
 
     # Perform join
-    result = df1.join(df2, "id", "inner") \
-                .select("id", "name", "salary") \
-                .collect()
+    result = df1.join(df2, "id", "inner").select("id", "name", "salary").collect()
 
     # Convert to list of tuples
     return [(row["id"], row["name"], row["salary"]) for row in result]
@@ -138,37 +154,37 @@ def exercise_7d_caching_comparison(spark: SparkSession, data: List[tuple]):
     start_time = time.time()
     rdd = spark.sparkContext.parallelize(data)
     # Perform multiple operations
-    count1 = rdd.count()
+    rdd.count()
     sum1 = rdd.map(lambda x: x[1]).sum()
     filtered1 = rdd.filter(lambda x: x[1] > 500).count()
-    results['rdd_no_cache'] = time.time() - start_time
+    results["rdd_no_cache"] = time.time() - start_time
 
     # Test RDD with caching
     start_time = time.time()
     rdd_cached = spark.sparkContext.parallelize(data).cache()
     # Perform multiple operations
-    count2 = rdd_cached.count()
+    rdd_cached.count()
     sum2 = rdd_cached.map(lambda x: x[1]).sum()
     filtered2 = rdd_cached.filter(lambda x: x[1] > 500).count()
-    results['rdd_with_cache'] = time.time() - start_time
+    results["rdd_with_cache"] = time.time() - start_time
 
     # Test DataFrame without caching
     start_time = time.time()
     df = spark.createDataFrame(data, ["id", "value1", "value2"])
     # Perform multiple operations
-    count3 = df.count()
-    sum3 = df.agg(spark_sum("value1")).collect()[0][0]
-    filtered3 = df.filter(col("value1") > 500).count()
-    results['df_no_cache'] = time.time() - start_time
+    df.count()
+    df.agg(spark_sum("value1")).collect()[0][0]
+    df.filter(col("value1") > 500).count()
+    results["df_no_cache"] = time.time() - start_time
 
     # Test DataFrame with caching
     start_time = time.time()
     df_cached = spark.createDataFrame(data, ["id", "value1", "value2"]).cache()
     # Perform multiple operations
-    count4 = df_cached.count()
-    sum4 = df_cached.agg(spark_sum("value1")).collect()[0][0]
-    filtered4 = df_cached.filter(col("value1") > 500).count()
-    results['df_with_cache'] = time.time() - start_time
+    df_cached.count()
+    df_cached.agg(spark_sum("value1")).collect()[0][0]
+    df_cached.filter(col("value1") > 500).count()
+    results["df_with_cache"] = time.time() - start_time
 
     return results
 
@@ -187,28 +203,33 @@ def exercise_7e_explain_plans(spark: SparkSession, data: List[tuple]):
     sys.stdout = buffer1 = StringIO()
     simple_filter.explain(True)
     sys.stdout = old_stdout
-    plans['simple_filter_plan'] = buffer1.getvalue()
+    plans["simple_filter_plan"] = buffer1.getvalue()
 
     # Complex aggregation plan
-    complex_agg = df.groupBy("department") \
-                    .agg(avg("salary").alias("avg_salary"),
-                         count("*").alias("emp_count")) \
-                    .filter(col("avg_salary") > 70000)
+    complex_agg = (
+        df.groupBy("department")
+        .agg(avg("salary").alias("avg_salary"), count("*").alias("emp_count"))
+        .filter(col("avg_salary") > 70000)
+    )
     old_stdout = sys.stdout
     sys.stdout = buffer2 = StringIO()
     complex_agg.explain(True)
     sys.stdout = old_stdout
-    plans['complex_aggregation_plan'] = buffer2.getvalue()
+    plans["complex_aggregation_plan"] = buffer2.getvalue()
 
     # Join plan
-    df2 = spark.createDataFrame([(1, "Engineering"), (2, "Marketing")], ["dept_id", "dept_name"])
-    df_with_dept_id = df.withColumn("dept_id", when(col("department") == "Engineering", 1).otherwise(2))
+    df2 = spark.createDataFrame(
+        [(1, "Engineering"), (2, "Marketing")], ["dept_id", "dept_name"]
+    )
+    df_with_dept_id = df.withColumn(
+        "dept_id", when(col("department") == "Engineering", 1).otherwise(2)
+    )
     join_result = df_with_dept_id.join(df2, "dept_id")
     old_stdout = sys.stdout
     sys.stdout = buffer3 = StringIO()
     join_result.explain(True)
     sys.stdout = old_stdout
-    plans['join_plan'] = buffer3.getvalue()
+    plans["join_plan"] = buffer3.getvalue()
 
     return plans
 
@@ -226,7 +247,7 @@ def run_solutions():
         ("Alice", 28, 85000),
         ("Bob", 34, 75000),
         ("Charlie", 29, 90000),
-        ("Diana", 31, 70000)
+        ("Diana", 31, 70000),
     ]
 
     print("RDD Approach:")
@@ -244,7 +265,7 @@ def run_solutions():
         ("Bob", "Engineering", 75000),
         ("Charlie", "Marketing", 70000),
         ("Diana", "Marketing", 72000),
-        ("Eve", "Sales", 68000)
+        ("Eve", "Sales", 68000),
     ]
 
     print("RDD Approach:")
@@ -281,7 +302,7 @@ def run_solutions():
     plan_data = [
         ("Alice", 28, "Engineering", 85000),
         ("Bob", 34, "Marketing", 75000),
-        ("Charlie", 29, "Engineering", 90000)
+        ("Charlie", 29, "Engineering", 90000),
     ]
     result_7e = exercise_7e_explain_plans(spark, plan_data)
     print("Execution plans captured successfully!")
@@ -289,7 +310,11 @@ def run_solutions():
 
     # Show a sample plan
     print("\nSample execution plan (simple filter):")
-    print(result_7e['simple_filter_plan'][:200] + "..." if len(result_7e['simple_filter_plan']) > 200 else result_7e['simple_filter_plan'])
+    print(
+        result_7e["simple_filter_plan"][:200] + "..."
+        if len(result_7e["simple_filter_plan"]) > 200
+        else result_7e["simple_filter_plan"]
+    )
 
     spark.stop()
     print("\n🎓 All Exercise 7 solutions demonstrated successfully!")

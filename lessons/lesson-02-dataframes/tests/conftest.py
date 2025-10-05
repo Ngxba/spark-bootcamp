@@ -5,11 +5,11 @@ Pytest configuration and shared fixtures for Spark DataFrame tests
 This module provides common test configuration and fixtures.
 """
 
-import pytest
-import os
-import tempfile
 import shutil
+import tempfile
 from pathlib import Path
+
+import pytest
 from pyspark.sql import SparkSession
 
 
@@ -18,9 +18,7 @@ def pytest_configure(config):
     config.addinivalue_line(
         "markers", "slow: marks tests as slow (deselect with '-m \"not slow\"')"
     )
-    config.addinivalue_line(
-        "markers", "integration: marks tests as integration tests"
-    )
+    config.addinivalue_line("markers", "integration: marks tests as integration tests")
     config.addinivalue_line(
         "markers", "dataframe: marks tests that require DataFrame operations"
     )
@@ -33,14 +31,15 @@ def pytest_configure(config):
 def spark_session():
     """Create a Spark session for the entire test session."""
     # Configure Spark for testing
-    spark = SparkSession.builder \
-        .appName("SparkDataFrameTests") \
-        .master("local[2]") \
-        .config("spark.sql.adaptive.enabled", "true") \
-        .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
-        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer") \
-        .config("spark.sql.execution.arrow.pyspark.enabled", "false") \
+    spark = (
+        SparkSession.builder.appName("SparkDataFrameTests")
+        .master("local[2]")
+        .config("spark.sql.adaptive.enabled", "true")
+        .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
+        .config("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
+        .config("spark.sql.execution.arrow.pyspark.enabled", "false")
         .getOrCreate()
+    )
 
     # Set log level to reduce noise during testing
     spark.sparkContext.setLogLevel("WARN")
@@ -81,7 +80,7 @@ def sample_employee_data():
         ("Bob Chen", 34, "Marketing", 65000),
         ("Charlie Davis", 29, "Engineering", 78000),
         ("Diana Rodriguez", 31, "Sales", 72000),
-        ("Eve Wilson", 26, "Engineering", 92000)
+        ("Eve Wilson", 26, "Engineering", 92000),
     ]
 
 
@@ -93,7 +92,7 @@ def sample_sales_data():
         ("Product B", "Electronics", 800.00, "South"),
         ("Product C", "Furniture", 450.00, "East"),
         ("Product D", "Books", 25.99, "West"),
-        ("Product E", "Electronics", 999.99, "North")
+        ("Product E", "Electronics", 999.99, "North"),
     ]
 
 
@@ -104,14 +103,14 @@ def sample_customer_data():
         (1, "Alice Johnson", "New York", 28),
         (2, "Bob Smith", "Los Angeles", 34),
         (3, "Charlie Brown", "Chicago", 29),
-        (4, "Diana Wilson", "Houston", 31)
+        (4, "Diana Wilson", "Houston", 31),
     ]
 
     orders = [
         (101, 1, 250.0, "Completed"),
         (102, 1, 150.0, "Completed"),
         (103, 2, 300.0, "Pending"),
-        (104, 3, 75.0, "Completed")
+        (104, 3, 75.0, "Completed"),
     ]
 
     return customers, orders
@@ -131,10 +130,14 @@ class SparkTestUtils:
             check_order: Whether to check row order (default: False)
         """
         # Check column names
-        assert df1.columns == df2.columns, f"Columns differ: {df1.columns} != {df2.columns}"
+        assert (
+            df1.columns == df2.columns
+        ), f"Columns differ: {df1.columns} != {df2.columns}"
 
         # Check row count
-        assert df1.count() == df2.count(), f"Row counts differ: {df1.count()} != {df2.count()}"
+        assert (
+            df1.count() == df2.count()
+        ), f"Row counts differ: {df1.count()} != {df2.count()}"
 
         # Check data content
         if check_order:
@@ -150,7 +153,9 @@ class SparkTestUtils:
     @staticmethod
     def assert_schema_equal(df1, df2):
         """Assert that two DataFrames have the same schema."""
-        assert df1.schema == df2.schema, f"Schemas differ:\n{df1.schema}\n!=\n{df2.schema}"
+        assert (
+            df1.schema == df2.schema
+        ), f"Schemas differ:\n{df1.schema}\n!=\n{df2.schema}"
 
     @staticmethod
     def create_test_dataframe(spark, data, columns, schema=None):
@@ -201,8 +206,5 @@ def pytest_runtest_setup(item):
 def pytest_addoption(parser):
     """Add custom command line options."""
     parser.addoption(
-        "--runslow",
-        action="store_true",
-        default=False,
-        help="run slow tests"
+        "--runslow", action="store_true", default=False, help="run slow tests"
     )

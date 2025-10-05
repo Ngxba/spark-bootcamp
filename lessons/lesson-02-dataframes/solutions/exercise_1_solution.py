@@ -6,19 +6,29 @@ This file contains the complete solutions for Exercise 1.
 Study these solutions to understand DataFrame creation and basic operations.
 """
 
+from typing import Any, Dict, List
+
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, upper, length, when, count, avg, sum as spark_sum, max as spark_max, desc
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType
-from typing import List, Dict, Any
-import os
+from pyspark.sql.functions import avg, col, count, length
+from pyspark.sql.functions import max as spark_max
+from pyspark.sql.functions import sum as spark_sum
+from pyspark.sql.functions import when
+from pyspark.sql.types import (
+    DoubleType,
+    IntegerType,
+    StringType,
+    StructField,
+    StructType,
+)
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise1-Solutions") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise1-Solutions")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_1a(spark: SparkSession, data: List[tuple], columns: List[str]):
@@ -42,11 +52,13 @@ def exercise_1b(spark: SparkSession, dict_data: List[Dict[str, Any]]):
 def exercise_1c(spark: SparkSession, data: List[tuple]):
     """Create a DataFrame with an explicit schema."""
     # Define explicit schema
-    schema = StructType([
-        StructField("name", StringType(), True),
-        StructField("age", IntegerType(), True),
-        StructField("salary", DoubleType(), True)
-    ])
+    schema = StructType(
+        [
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("salary", DoubleType(), True),
+        ]
+    )
 
     # Create DataFrame with the schema
     df = spark.createDataFrame(data, schema)
@@ -57,9 +69,11 @@ def exercise_1c(spark: SparkSession, data: List[tuple]):
 def exercise_1d(spark: SparkSession, df):
     """Perform basic DataFrame operations: select and filter."""
     # Filter for Engineering department, select name and salary, order by salary desc
-    result = df.filter(col("department") == "Engineering") \
-               .select("name", "salary") \
-               .orderBy(col("salary").desc())
+    result = (
+        df.filter(col("department") == "Engineering")
+        .select("name", "salary")
+        .orderBy(col("salary").desc())
+    )
 
     return result
 
@@ -67,11 +81,11 @@ def exercise_1d(spark: SparkSession, df):
 def exercise_1e(spark: SparkSession, df):
     """Add calculated columns to a DataFrame."""
     # Add calculated columns
-    result = df.withColumn("annual_salary", col("salary") * 12) \
-               .withColumn("age_category",
-                          when(col("age") < 30, "Young")
-                          .otherwise("Senior")) \
-               .withColumn("name_length", length(col("name")))
+    result = (
+        df.withColumn("annual_salary", col("salary") * 12)
+        .withColumn("age_category", when(col("age") < 30, "Young").otherwise("Senior"))
+        .withColumn("name_length", length(col("name")))
+    )
 
     return result
 
@@ -79,14 +93,16 @@ def exercise_1e(spark: SparkSession, df):
 def exercise_1f(spark: SparkSession, df):
     """Perform aggregations on the DataFrame."""
     # Group by department and calculate aggregations
-    result = df.groupBy("department") \
-               .agg(
-                   count("*").alias("employee_count"),
-                   avg("salary").alias("avg_salary"),
-                   spark_max("salary").alias("max_salary"),
-                   spark_sum("salary").alias("total_payroll")
-               ) \
-               .orderBy(col("avg_salary").desc())
+    result = (
+        df.groupBy("department")
+        .agg(
+            count("*").alias("employee_count"),
+            avg("salary").alias("avg_salary"),
+            spark_max("salary").alias("max_salary"),
+            spark_sum("salary").alias("total_payroll"),
+        )
+        .orderBy(col("avg_salary").desc())
+    )
 
     return result
 
@@ -109,7 +125,7 @@ def run_solutions():
     print("\n1b. Create DataFrame from Dictionaries")
     dict_data = [
         {"name": "Alice", "age": 25, "salary": 50000},
-        {"name": "Bob", "age": 30, "salary": 60000}
+        {"name": "Bob", "age": 30, "salary": 60000},
     ]
     df, schema_str = exercise_1b(spark, dict_data)
     df.show()
@@ -128,7 +144,7 @@ def run_solutions():
         ("Alice", 25, "Engineering", 80000),
         ("Bob", 30, "Marketing", 75000),
         ("Charlie", 35, "Engineering", 85000),
-        ("Diana", 28, "Sales", 70000)
+        ("Diana", 28, "Sales", 70000),
     ]
     test_df = spark.createDataFrame(test_data, ["name", "age", "department", "salary"])
     result_1d = exercise_1d(spark, test_df)
@@ -148,7 +164,7 @@ def run_solutions():
         ("Engineering", 85000),
         ("Marketing", 75000),
         ("Sales", 70000),
-        ("Sales", 72000)
+        ("Sales", 72000),
     ]
     test_df = spark.createDataFrame(test_data, ["department", "salary"])
     result_1f = exercise_1f(spark, test_df)

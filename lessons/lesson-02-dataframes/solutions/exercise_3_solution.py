@@ -6,17 +6,20 @@ This file contains the complete solutions for Exercise 3.
 Study these solutions to understand Spark SQL and temporary views.
 """
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, avg, sum as spark_sum, count, max as spark_max
 from typing import List
+
+from pyspark.sql import SparkSession
+from pyspark.sql.functions import avg, col
+from pyspark.sql.functions import sum as spark_sum
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise3-Solutions") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise3-Solutions")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_3a(spark: SparkSession, employee_data: List[tuple]):
@@ -26,12 +29,14 @@ def exercise_3a(spark: SparkSession, employee_data: List[tuple]):
     df.createOrReplaceTempView("employees")
 
     # SQL query to get employees in Engineering department
-    result = spark.sql("""
+    result = spark.sql(
+        """
         SELECT name, salary, age
         FROM employees
         WHERE department = 'Engineering'
         ORDER BY salary DESC
-    """)
+    """
+    )
 
     return result
 
@@ -39,11 +44,14 @@ def exercise_3a(spark: SparkSession, employee_data: List[tuple]):
 def exercise_3b(spark: SparkSession, sales_data: List[tuple]):
     """Use SQL for aggregations and grouping."""
     # Create DataFrame and temporary view
-    df = spark.createDataFrame(sales_data, ["product", "category", "sales_amount", "region"])
+    df = spark.createDataFrame(
+        sales_data, ["product", "category", "sales_amount", "region"]
+    )
     df.createOrReplaceTempView("sales")
 
     # SQL query for category-wise aggregations
-    result = spark.sql("""
+    result = spark.sql(
+        """
         SELECT
             category,
             COUNT(*) as product_count,
@@ -53,22 +61,30 @@ def exercise_3b(spark: SparkSession, sales_data: List[tuple]):
         FROM sales
         GROUP BY category
         ORDER BY total_sales DESC
-    """)
+    """
+    )
 
     return result
 
 
-def exercise_3c(spark: SparkSession, customer_data: List[tuple], order_data: List[tuple]):
+def exercise_3c(
+    spark: SparkSession, customer_data: List[tuple], order_data: List[tuple]
+):
     """Perform SQL joins between multiple tables."""
     # Create DataFrames and temporary views
-    customers_df = spark.createDataFrame(customer_data, ["customer_id", "name", "city", "age"])
-    orders_df = spark.createDataFrame(order_data, ["order_id", "customer_id", "amount", "status"])
+    customers_df = spark.createDataFrame(
+        customer_data, ["customer_id", "name", "city", "age"]
+    )
+    orders_df = spark.createDataFrame(
+        order_data, ["order_id", "customer_id", "amount", "status"]
+    )
 
     customers_df.createOrReplaceTempView("customers")
     orders_df.createOrReplaceTempView("orders")
 
     # SQL query with JOIN
-    result = spark.sql("""
+    result = spark.sql(
+        """
         SELECT
             c.name,
             c.city,
@@ -80,7 +96,8 @@ def exercise_3c(spark: SparkSession, customer_data: List[tuple], order_data: Lis
         LEFT JOIN orders o ON c.customer_id = o.customer_id
         GROUP BY c.customer_id, c.name, c.city, c.age
         ORDER BY total_spent DESC
-    """)
+    """
+    )
 
     return result
 
@@ -88,11 +105,14 @@ def exercise_3c(spark: SparkSession, customer_data: List[tuple], order_data: Lis
 def exercise_3d(spark: SparkSession, product_data: List[tuple]):
     """Use SQL window functions and advanced analytics."""
     # Create DataFrame and temporary view
-    df = spark.createDataFrame(product_data, ["product_name", "category", "price", "rating"])
+    df = spark.createDataFrame(
+        product_data, ["product_name", "category", "price", "rating"]
+    )
     df.createOrReplaceTempView("products")
 
     # SQL query with window functions
-    result = spark.sql("""
+    result = spark.sql(
+        """
         SELECT
             product_name,
             category,
@@ -108,7 +128,8 @@ def exercise_3d(spark: SparkSession, product_data: List[tuple]):
             END as price_vs_category_avg
         FROM products
         ORDER BY category, rank_in_category
-    """)
+    """
+    )
 
     return result
 
@@ -116,11 +137,15 @@ def exercise_3d(spark: SparkSession, product_data: List[tuple]):
 def exercise_3e(spark: SparkSession, transaction_data: List[tuple]):
     """Complex SQL query with subqueries and CTEs."""
     # Create DataFrame and temporary view
-    df = spark.createDataFrame(transaction_data, ["transaction_id", "customer_id", "amount", "date", "merchant_type"])
+    df = spark.createDataFrame(
+        transaction_data,
+        ["transaction_id", "customer_id", "amount", "date", "merchant_type"],
+    )
     df.createOrReplaceTempView("transactions")
 
     # Complex SQL with CTE
-    result = spark.sql("""
+    result = spark.sql(
+        """
         WITH customer_stats AS (
             SELECT
                 customer_id,
@@ -157,7 +182,8 @@ def exercise_3e(spark: SparkSession, transaction_data: List[tuple]):
             END as customer_frequency
         FROM customer_stats cs
         ORDER BY cs.total_spent DESC
-    """)
+    """
+    )
 
     return result
 
@@ -169,7 +195,8 @@ def exercise_3f(spark: SparkSession, sales_data: List[tuple]):
     df.createOrReplaceTempView("sales_data")
 
     # SQL approach
-    sql_result = spark.sql("""
+    sql_result = spark.sql(
+        """
         SELECT
             region,
             quarter,
@@ -184,22 +211,27 @@ def exercise_3f(spark: SparkSession, sales_data: List[tuple]):
         FROM sales_data
         GROUP BY region, quarter
         ORDER BY region, quarter
-    """)
+    """
+    )
 
     # DataFrame API approach (for comparison)
     from pyspark.sql.functions import countDistinct, when
 
-    df_result = df.groupBy("region", "quarter") \
-                  .agg(
-                      countDistinct("product").alias("unique_products"),
-                      spark_sum("sales").alias("total_sales"),
-                      avg("sales").alias("avg_sales")
-                  ) \
-                  .withColumn("performance_tier",
-                             when(col("total_sales") > 10000, "High")
-                             .when(col("total_sales") > 5000, "Medium")
-                             .otherwise("Low")) \
-                  .orderBy("region", "quarter")
+    df_result = (
+        df.groupBy("region", "quarter")
+        .agg(
+            countDistinct("product").alias("unique_products"),
+            spark_sum("sales").alias("total_sales"),
+            avg("sales").alias("avg_sales"),
+        )
+        .withColumn(
+            "performance_tier",
+            when(col("total_sales") > 10000, "High")
+            .when(col("total_sales") > 5000, "Medium")
+            .otherwise("Low"),
+        )
+        .orderBy("region", "quarter")
+    )
 
     return sql_result, df_result
 
@@ -218,7 +250,7 @@ def run_solutions():
         ("Bob", "Marketing", 65000, 34),
         ("Charlie", "Engineering", 78000, 29),
         ("Diana", "Sales", 72000, 31),
-        ("Eve", "Engineering", 92000, 26)
+        ("Eve", "Engineering", 92000, 26),
     ]
     result_3a = exercise_3a(spark, employee_data)
     result_3a.show()
@@ -231,7 +263,7 @@ def run_solutions():
         ("Chair", "Furniture", 150, "North"),
         ("Desk", "Furniture", 300, "East"),
         ("Phone", "Electronics", 800, "West"),
-        ("Table", "Furniture", 200, "South")
+        ("Table", "Furniture", 200, "South"),
     ]
     result_3b = exercise_3b(spark, sales_data)
     result_3b.show()
@@ -242,14 +274,14 @@ def run_solutions():
         (1, "Alice Johnson", "New York", 28),
         (2, "Bob Smith", "Los Angeles", 34),
         (3, "Charlie Brown", "Chicago", 29),
-        (4, "Diana Wilson", "Houston", 31)
+        (4, "Diana Wilson", "Houston", 31),
     ]
     order_data = [
         (101, 1, 250.0, "Completed"),
         (102, 1, 150.0, "Completed"),
         (103, 2, 300.0, "Pending"),
         (104, 3, 75.0, "Completed"),
-        (105, 3, 200.0, "Completed")
+        (105, 3, 200.0, "Completed"),
     ]
     result_3c = exercise_3c(spark, customer_data, order_data)
     result_3c.show()
@@ -262,7 +294,7 @@ def run_solutions():
         ("iPad", "Electronics", 599, 4.4),
         ("Office Chair", "Furniture", 299, 4.2),
         ("Desk Lamp", "Furniture", 89, 4.0),
-        ("Standing Desk", "Furniture", 699, 4.6)
+        ("Standing Desk", "Furniture", 699, 4.6),
     ]
     result_3d = exercise_3d(spark, product_data)
     result_3d.show(truncate=False)
@@ -276,7 +308,7 @@ def run_solutions():
         ("TXN004", 2, 500.0, "2023-01-15", "Electronics"),
         ("TXN005", 2, 300.0, "2023-01-16", "Clothing"),
         ("TXN006", 3, 50.0, "2023-01-15", "Coffee Shop"),
-        ("TXN007", 3, 800.0, "2023-01-16", "Electronics")
+        ("TXN007", 3, 800.0, "2023-01-16", "Electronics"),
     ]
     result_3e = exercise_3e(spark, transaction_data)
     result_3e.show()
@@ -289,7 +321,7 @@ def run_solutions():
         ("South", "ProductA", 800, "Q1"),
         ("South", "ProductC", 1200, "Q1"),
         ("North", "ProductA", 1100, "Q2"),
-        ("West", "ProductB", 900, "Q2")
+        ("West", "ProductB", 900, "Q2"),
     ]
     sql_result, df_result = exercise_3f(spark, comparison_sales_data)
 

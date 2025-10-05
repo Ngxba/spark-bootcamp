@@ -7,8 +7,8 @@ These tests validate the solutions for all exercises.
 
 import pytest
 from pyspark.sql import SparkSession
-from pyspark.sql.types import *
 from pyspark.sql.functions import col
+from pyspark.sql.types import *
 
 # Import all solution functions
 from solutions.exercise_1_solution import *
@@ -23,12 +23,13 @@ from solutions.exercise_7_solution import *
 @pytest.fixture(scope="session")
 def spark():
     """Create a Spark session for testing."""
-    spark = SparkSession.builder \
-        .appName("TestAllExercises") \
-        .master("local[4]") \
-        .config("spark.sql.adaptive.enabled", "true") \
-        .config("spark.sql.adaptive.coalescePartitions.enabled", "true") \
+    spark = (
+        SparkSession.builder.appName("TestAllExercises")
+        .master("local[4]")
+        .config("spark.sql.adaptive.enabled", "true")
+        .config("spark.sql.adaptive.coalescePartitions.enabled", "true")
         .getOrCreate()
+    )
     yield spark
     spark.stop()
 
@@ -94,7 +95,7 @@ class TestExercise3Solutions:
         """Test basic SQL queries."""
         employee_data = [
             ("Alice", "Engineering", 85000, 28),
-            ("Bob", "Marketing", 65000, 34)
+            ("Bob", "Marketing", 65000, 34),
         ]
         result = exercise_3a(spark, employee_data)
 
@@ -107,7 +108,7 @@ class TestExercise3Solutions:
         """Test SQL aggregations."""
         sales_data = [
             ("Laptop", "Electronics", 1200, "North"),
-            ("Mouse", "Electronics", 25, "South")
+            ("Mouse", "Electronics", 25, "South"),
         ]
         result = exercise_3b(spark, sales_data)
 
@@ -183,7 +184,7 @@ class TestExercise6Solutions:
         """Test statistical analysis functions."""
         sales_data = [
             ("Electronics", "North", 1500.00, 3),
-            ("Electronics", "South", 2200.00, 4)
+            ("Electronics", "South", 2200.00, 4),
         ]
         result = exercise_6a(spark, sales_data)
 
@@ -200,7 +201,7 @@ class TestExercise6Solutions:
         """Test window functions for ranking."""
         employee_data = [
             ("Alice", "Engineering", 95000, 8),
-            ("Bob", "Engineering", 87000, 5)
+            ("Bob", "Engineering", 87000, 5),
         ]
         result = exercise_6b(spark, employee_data)
 
@@ -260,11 +261,11 @@ class TestDatasetIntegrity:
         emp_data = [("Alice", "Engineering", 85000, 28)]
         df = spark.createDataFrame(emp_data, ["name", "department", "salary", "age"])
 
-        null_counts = df.select([
-            col(c).isNull().cast("int").alias(c) for c in df.columns
-        ]).agg(*[
-            spark_sum(c).alias(c) for c in df.columns
-        ]).collect()[0]
+        null_counts = (
+            df.select([col(c).isNull().cast("int").alias(c) for c in df.columns])
+            .agg(*[spark_sum(c).alias(c) for c in df.columns])
+            .collect()[0]
+        )
 
         # No nulls expected in this test data
         assert all(count == 0 for count in null_counts.asDict().values())
@@ -272,10 +273,12 @@ class TestDatasetIntegrity:
     def test_data_type_consistency(self, spark):
         """Test that data types are consistent across operations."""
         # Create DataFrame with explicit schema
-        schema = StructType([
-            StructField("id", IntegerType(), False),
-            StructField("value", DoubleType(), False)
-        ])
+        schema = StructType(
+            [
+                StructField("id", IntegerType(), False),
+                StructField("value", DoubleType(), False),
+            ]
+        )
 
         data = [(1, 100.5), (2, 200.7)]
         df = spark.createDataFrame(data, schema)
@@ -328,22 +331,25 @@ class TestCompleteWorkflows:
         # Extract: Create raw data
         raw_data = [
             ("Alice Johnson", "alice@company.com", "Engineering", "85000"),
-            ("Bob Smith", "bob@email.org", "Marketing", "65000")
+            ("Bob Smith", "bob@email.org", "Marketing", "65000"),
         ]
 
         # Transform: Clean and process data
-        df = spark.createDataFrame(raw_data, ["name", "email", "department", "salary_str"])
+        df = spark.createDataFrame(
+            raw_data, ["name", "email", "department", "salary_str"]
+        )
 
         # Clean data types
-        df_clean = df.withColumn("salary", col("salary_str").cast(IntegerType())) \
-                     .withColumn("email_domain",
-                                regexp_extract(col("email"), r"@(.+)", 1)) \
-                     .drop("salary_str")
+        df_clean = (
+            df.withColumn("salary", col("salary_str").cast(IntegerType()))
+            .withColumn("email_domain", regexp_extract(col("email"), r"@(.+)", 1))
+            .drop("salary_str")
+        )
 
         # Aggregate by department
-        dept_stats = df_clean.groupBy("department") \
-                            .agg(avg("salary").alias("avg_salary"),
-                                count("*").alias("employee_count"))
+        dept_stats = df_clean.groupBy("department").agg(
+            avg("salary").alias("avg_salary"), count("*").alias("employee_count")
+        )
 
         # Load: Verify results
         results = dept_stats.collect()
@@ -358,22 +364,28 @@ class TestCompleteWorkflows:
         # Test data with potential quality issues
         test_data = [
             ("Alice", 28, "Engineering", 85000),
-            ("", 30, "Marketing", 65000),      # Empty name
-            ("Charlie", -5, "Sales", 70000),   # Invalid age
-            ("Diana", 31, "", 72000),          # Empty department
-            ("Eve", 26, "Engineering", 0)      # Zero salary
+            ("", 30, "Marketing", 65000),  # Empty name
+            ("Charlie", -5, "Sales", 70000),  # Invalid age
+            ("Diana", 31, "", 72000),  # Empty department
+            ("Eve", 26, "Engineering", 0),  # Zero salary
         ]
 
         df = spark.createDataFrame(test_data, ["name", "age", "department", "salary"])
 
         # Data quality checks
-        quality_report = df.select([
-            count("*").alias("total_records"),
-            spark_sum(when(col("name") == "", 1).otherwise(0)).alias("empty_names"),
-            spark_sum(when(col("age") < 0, 1).otherwise(0)).alias("invalid_ages"),
-            spark_sum(when(col("department") == "", 1).otherwise(0)).alias("empty_departments"),
-            spark_sum(when(col("salary") <= 0, 1).otherwise(0)).alias("invalid_salaries")
-        ]).collect()[0]
+        quality_report = df.select(
+            [
+                count("*").alias("total_records"),
+                spark_sum(when(col("name") == "", 1).otherwise(0)).alias("empty_names"),
+                spark_sum(when(col("age") < 0, 1).otherwise(0)).alias("invalid_ages"),
+                spark_sum(when(col("department") == "", 1).otherwise(0)).alias(
+                    "empty_departments"
+                ),
+                spark_sum(when(col("salary") <= 0, 1).otherwise(0)).alias(
+                    "invalid_salaries"
+                ),
+            ]
+        ).collect()[0]
 
         # Verify quality issues are detected
         assert quality_report["total_records"] == 5

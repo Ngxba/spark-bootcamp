@@ -19,20 +19,18 @@ Learning Goals:
 Run this file: python exercise_2.py
 """
 
+from typing import List
+
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import (
-    col, when, upper, lower, length, round as spark_round,
-    avg, sum as spark_sum, count, max as spark_max, min as spark_min
-)
-from typing import List, Tuple
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise2-BasicOperations") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise2-BasicOperations")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_2a(spark: SparkSession, products_data: List[tuple]):
@@ -53,7 +51,6 @@ def exercise_2a(spark: SparkSession, products_data: List[tuple]):
     - Order by rating in descending order
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_2b(spark: SparkSession, df):
@@ -75,7 +72,6 @@ def exercise_2b(spark: SparkSession, df):
     """
     # TODO: Implement this function
     # Use upper(), lower(), length(), and substring() functions
-    pass
 
 
 def exercise_2c(spark: SparkSession, df):
@@ -96,7 +92,6 @@ def exercise_2c(spark: SparkSession, df):
     """
     # TODO: Implement this function
     # Use when().when().otherwise() for multiple conditions
-    pass
 
 
 def exercise_2d(spark: SparkSession, sales_data: List[tuple]):
@@ -122,7 +117,6 @@ def exercise_2d(spark: SparkSession, sales_data: List[tuple]):
     # 2. Calculate revenue as quantity * unit_price
     # 3. Group by region and calculate aggregations
     # 4. Order by total_revenue descending
-    pass
 
 
 def exercise_2e(spark: SparkSession, df):
@@ -143,7 +137,6 @@ def exercise_2e(spark: SparkSession, df):
     """
     # TODO: Implement this function
     # Use round() function and conditional logic
-    pass
 
 
 def exercise_2f(spark: SparkSession, employees_df, departments_df):
@@ -166,7 +159,6 @@ def exercise_2f(spark: SparkSession, employees_df, departments_df):
     """
     # TODO: Implement this function
     # Perform inner join on dept_id and select required columns
-    pass
 
 
 def run_exercises():
@@ -184,7 +176,7 @@ def run_exercises():
             ("Book", "Education", 29.99, 4.8),
             ("Phone", "Electronics", 699.99, 4.2),
             ("Pen", "Office", 2.99, 3.9),
-            ("Tablet", "Electronics", 399.99, 4.6)
+            ("Tablet", "Electronics", 399.99, 4.6),
         ]
         result_2a = exercise_2a(spark, products_data)
 
@@ -193,9 +185,9 @@ def run_exercises():
             result_2a.show()
             print(f"Row count: {result_2a.count()}")
             print(f"Columns: {result_2a.columns}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -204,44 +196,53 @@ def run_exercises():
     try:
         test_data = [("Alice",), ("Bob",), ("Charlie",)]
         test_df = spark.createDataFrame(test_data, ["name"])
-        
+
         result_2b = exercise_2b(spark, test_df)
-        
+
         if result_2b is not None:
             print("DataFrame with string transformations:")
             result_2b.show()
-            expected_cols = ["name", "name_upper", "name_lower", "name_length", "first_char"]
+            expected_cols = [
+                "name",
+                "name_upper",
+                "name_lower",
+                "name_length",
+                "first_char",
+            ]
             actual_cols = result_2b.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
     # Test Exercise 2c
     print("\n📝 Exercise 2c: Conditional Columns")
     try:
-        test_data = [
-            ("Alice", 28, 85000),
-            ("Bob", 45, 65000),
-            ("Charlie", 55, 45000)
-        ]
+        test_data = [("Alice", 28, 85000), ("Bob", 45, 65000), ("Charlie", 55, 45000)]
         test_df = spark.createDataFrame(test_data, ["name", "age", "salary"])
-        
+
         result_2c = exercise_2c(spark, test_df)
-        
+
         if result_2c is not None:
             print("DataFrame with conditional columns:")
             result_2c.show()
-            expected_cols = ["name", "age", "salary", "salary_level", "generation", "bonus"]
+            expected_cols = [
+                "name",
+                "age",
+                "salary",
+                "salary_level",
+                "generation",
+                "bonus",
+            ]
             actual_cols = result_2c.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -253,68 +254,76 @@ def run_exercises():
             ("North", "Phone", 15, 699.99),
             ("South", "Laptop", 8, 999.99),
             ("South", "Tablet", 12, 399.99),
-            ("East", "Phone", 20, 699.99)
+            ("East", "Phone", 20, 699.99),
         ]
-        
+
         result_2d = exercise_2d(spark, sales_data)
-        
+
         if result_2d is not None:
             print("Sales analysis by region:")
             result_2d.show()
-            expected_cols = ["region", "total_products", "total_quantity", "total_revenue", "avg_unit_price"]
+            expected_cols = [
+                "region",
+                "total_products",
+                "total_quantity",
+                "total_revenue",
+                "avg_unit_price",
+            ]
             actual_cols = result_2d.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
     # Test Exercise 2e
     print("\n📝 Exercise 2e: Numeric Operations and Rounding")
     try:
-        test_data = [
-            (99.99, 0.08),
-            (45.50, 0.06),
-            (150.00, 0.10)
-        ]
+        test_data = [(99.99, 0.08), (45.50, 0.06), (150.00, 0.10)]
         test_df = spark.createDataFrame(test_data, ["price", "tax_rate"])
-        
+
         result_2e = exercise_2e(spark, test_df)
-        
+
         if result_2e is not None:
             print("DataFrame with numeric calculations:")
             result_2e.show()
-            expected_cols = ["price", "tax_rate", "tax_amount", "total_price", "price_category"]
+            expected_cols = [
+                "price",
+                "tax_rate",
+                "tax_amount",
+                "total_price",
+                "price_category",
+            ]
             actual_cols = result_2e.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
     # Test Exercise 2f
     print("\n📝 Exercise 2f: Simple Join Operations")
     try:
-        employees_data = [
-            ("Alice", 1, 80000),
-            ("Bob", 2, 75000),
-            ("Charlie", 1, 85000)
-        ]
-        employees_df = spark.createDataFrame(employees_data, ["name", "dept_id", "salary"])
-        
+        employees_data = [("Alice", 1, 80000), ("Bob", 2, 75000), ("Charlie", 1, 85000)]
+        employees_df = spark.createDataFrame(
+            employees_data, ["name", "dept_id", "salary"]
+        )
+
         departments_data = [
             (1, "Engineering", "Building A"),
             (2, "Marketing", "Building B"),
-            (3, "Sales", "Building C")
+            (3, "Sales", "Building C"),
         ]
-        departments_df = spark.createDataFrame(departments_data, ["dept_id", "dept_name", "location"])
-        
+        departments_df = spark.createDataFrame(
+            departments_data, ["dept_id", "dept_name", "location"]
+        )
+
         result_2f = exercise_2f(spark, employees_df, departments_df)
-        
+
         if result_2f is not None:
             print("Employee-Department join result:")
             result_2f.show()
@@ -322,9 +331,9 @@ def run_exercises():
             actual_cols = result_2f.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 

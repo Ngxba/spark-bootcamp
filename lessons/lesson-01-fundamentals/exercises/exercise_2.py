@@ -19,18 +19,19 @@ Learning Goals:
 Run this file: python exercise_2.py
 """
 
-from pyspark.sql import SparkSession
-from typing import List, Tuple, Dict
-import re
 import os
+from typing import Dict, List, Tuple
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise2-TextProcessing") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise2-TextProcessing")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def create_sample_data():
@@ -105,7 +106,6 @@ def exercise_2a(spark: SparkSession) -> List[Tuple[str, int]]:
     - Return top 10 by frequency
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_2b(spark: SparkSession, text_lines: List[str]) -> Dict[str, List[str]]:
@@ -131,7 +131,6 @@ def exercise_2b(spark: SparkSession, text_lines: List[str]) -> Dict[str, List[st
     - Return unique words for each letter
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_2c(spark: SparkSession) -> List[Tuple[str, int]]:
@@ -151,10 +150,11 @@ def exercise_2c(spark: SparkSession) -> List[Tuple[str, int]]:
     - Return sorted by log level alphabetically
     """
     # TODO: Implement this function
-    pass
 
 
-def exercise_2d(spark: SparkSession, sentences: List[str]) -> List[Tuple[str, int, List[str]]]:
+def exercise_2d(
+    spark: SparkSession, sentences: List[str]
+) -> List[Tuple[str, int, List[str]]]:
     """
     Analyze sentences: return sentence, word count, and words longer than 5 characters.
 
@@ -172,7 +172,6 @@ def exercise_2d(spark: SparkSession, sentences: List[str]) -> List[Tuple[str, in
     - Clean words (remove punctuation, lowercase)
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_2e(spark: SparkSession, text_data: List[str]) -> Tuple[int, int, float]:
@@ -193,7 +192,6 @@ def exercise_2e(spark: SparkSession, text_data: List[str]) -> Tuple[int, int, fl
     - Clean words (remove punctuation, lowercase, non-empty)
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_2f(spark: SparkSession) -> List[Tuple[str, int]]:
@@ -214,7 +212,6 @@ def exercise_2f(spark: SparkSession) -> List[Tuple[str, int]]:
     - Format bigrams as "word1 word2"
     """
     # TODO: Implement this function
-    pass
 
 
 def run_exercises():
@@ -232,7 +229,7 @@ def run_exercises():
     try:
         result_2a = exercise_2a(spark)
         print(f"Top 10 words: {result_2a}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -243,7 +240,7 @@ def run_exercises():
         result_2b = exercise_2b(spark, test_text)
         print(f"Input: {test_text}")
         print(f"Categories: {dict(sorted(result_2b.items()))}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -252,7 +249,7 @@ def run_exercises():
     try:
         result_2c = exercise_2c(spark)
         print(f"Log levels: {result_2c}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -261,14 +258,14 @@ def run_exercises():
     test_sentences = [
         "The quick brown fox jumps over the lazy dog.",
         "Apache Spark is a powerful distributed computing framework.",
-        "Data processing at scale requires efficient algorithms."
+        "Data processing at scale requires efficient algorithms.",
     ]
     try:
         result_2d = exercise_2d(spark, test_sentences)
         print("Sentence analysis:")
         for sentence, word_count, long_words in result_2d:
             print(f"  '{sentence}' -> {word_count} words, long words: {long_words}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -277,13 +274,13 @@ def run_exercises():
     test_stats_text = [
         "Hello world from Apache Spark",
         "Spark makes big data processing easy",
-        "Hello again from the world of data"
+        "Hello again from the world of data",
     ]
     try:
         result_2e = exercise_2e(spark, test_stats_text)
         print(f"Input: {test_stats_text}")
         print(f"Statistics (total, unique, avg_length): {result_2e}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -292,7 +289,7 @@ def run_exercises():
     try:
         result_2f = exercise_2f(spark)
         print(f"Top 10 bigrams: {result_2f}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 

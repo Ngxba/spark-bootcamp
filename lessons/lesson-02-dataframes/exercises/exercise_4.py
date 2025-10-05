@@ -19,20 +19,23 @@ Learning Goals:
 Run this file: python exercise_4.py
 """
 
+from typing import List
+
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, when, isnan, isnull, broadcast
-from typing import List, Tuple
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise4-JoinsAndCombining") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise4-JoinsAndCombining")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
-def exercise_4a(spark: SparkSession, customers_data: List[tuple], orders_data: List[tuple]):
+def exercise_4a(
+    spark: SparkSession, customers_data: List[tuple], orders_data: List[tuple]
+):
     """
     Perform an inner join between customers and orders.
 
@@ -54,10 +57,11 @@ def exercise_4a(spark: SparkSession, customers_data: List[tuple], orders_data: L
     # 1. Create DataFrames from both datasets
     # 2. Perform inner join on customer_id
     # 3. Select and return required columns
-    pass
 
 
-def exercise_4b(spark: SparkSession, employees_data: List[tuple], departments_data: List[tuple]):
+def exercise_4b(
+    spark: SparkSession, employees_data: List[tuple], departments_data: List[tuple]
+):
     """
     Perform a left join to show all employees with their department info.
 
@@ -79,10 +83,11 @@ def exercise_4b(spark: SparkSession, employees_data: List[tuple], departments_da
     # 1. Create DataFrames from both datasets
     # 2. Perform left join on dept_id
     # 3. Select and return required columns
-    pass
 
 
-def exercise_4c(spark: SparkSession, products_data: List[tuple], inventory_data: List[tuple]):
+def exercise_4c(
+    spark: SparkSession, products_data: List[tuple], inventory_data: List[tuple]
+):
     """
     Perform a right join to show all inventory items with product details.
 
@@ -104,10 +109,11 @@ def exercise_4c(spark: SparkSession, products_data: List[tuple], inventory_data:
     # 1. Create DataFrames from both datasets
     # 2. Perform right join on product_id
     # 3. Select and return required columns
-    pass
 
 
-def exercise_4d(spark: SparkSession, students_data: List[tuple], courses_data: List[tuple]):
+def exercise_4d(
+    spark: SparkSession, students_data: List[tuple], courses_data: List[tuple]
+):
     """
     Perform a full outer join between students and courses.
 
@@ -129,7 +135,6 @@ def exercise_4d(spark: SparkSession, students_data: List[tuple], courses_data: L
     # 1. Create DataFrames from both datasets
     # 2. Perform full outer join on student_id
     # 3. Select and return required columns
-    pass
 
 
 def exercise_4e(spark: SparkSession, df_joined):
@@ -152,10 +157,11 @@ def exercise_4e(spark: SparkSession, df_joined):
     # 1. Create a column indicating if row has missing data
     # 2. Fill null values appropriately
     # 3. Return the cleaned DataFrame
-    pass
 
 
-def exercise_4f(spark: SparkSession, current_employees: List[tuple], new_hires: List[tuple]):
+def exercise_4f(
+    spark: SparkSession, current_employees: List[tuple], new_hires: List[tuple]
+):
     """
     Combine current employees with new hires using union operation.
 
@@ -179,7 +185,6 @@ def exercise_4f(spark: SparkSession, current_employees: List[tuple], new_hires: 
     # 2. Union the DataFrames
     # 3. Remove duplicates based on emp_id (keep first occurrence)
     # 4. Return the combined DataFrame
-    pass
 
 
 def run_exercises():
@@ -196,14 +201,14 @@ def run_exercises():
             (1, "Alice Johnson", "New York"),
             (2, "Bob Smith", "Los Angeles"),
             (3, "Charlie Brown", "Chicago"),
-            (4, "Diana Ross", "Miami")
+            (4, "Diana Ross", "Miami"),
         ]
 
         orders_data = [
             (101, 1, 150.00),
             (102, 2, 200.00),
             (103, 1, 75.50),
-            (104, 5, 300.00)  # Customer 5 doesn't exist
+            (104, 5, 300.00),  # Customer 5 doesn't exist
         ]
 
         result_4a = exercise_4a(spark, customers_data, orders_data)
@@ -216,9 +221,9 @@ def run_exercises():
             actual_cols = result_4a.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -229,17 +234,17 @@ def run_exercises():
             (1, "Alice", 10, 80000),
             (2, "Bob", 20, 75000),
             (3, "Charlie", 10, 85000),
-            (4, "Diana", None, 70000)  # No department
+            (4, "Diana", None, 70000),  # No department
         ]
-        
+
         departments_data = [
             (10, "Engineering", "John Doe"),
             (20, "Marketing", "Jane Smith"),
-            (30, "Sales", "Mike Johnson")  # No employees in this dept
+            (30, "Sales", "Mike Johnson"),  # No employees in this dept
         ]
-        
+
         result_4b = exercise_4b(spark, employees_data, departments_data)
-        
+
         if result_4b is not None:
             print("Left join result (all employees):")
             result_4b.show()
@@ -248,9 +253,9 @@ def run_exercises():
             actual_cols = result_4b.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -260,17 +265,17 @@ def run_exercises():
         products_data = [
             (101, "Laptop", "Electronics"),
             (102, "Book", "Education"),
-            (103, "Phone", "Electronics")
+            (103, "Phone", "Electronics"),
         ]
-        
+
         inventory_data = [
             (101, "Warehouse A", 50),
             (102, "Warehouse B", 100),
-            (104, "Warehouse A", 25)  # Product 104 doesn't exist
+            (104, "Warehouse A", 25),  # Product 104 doesn't exist
         ]
-        
+
         result_4c = exercise_4c(spark, products_data, inventory_data)
-        
+
         if result_4c is not None:
             print("Right join result (all inventory):")
             result_4c.show()
@@ -279,9 +284,9 @@ def run_exercises():
             actual_cols = result_4c.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -291,17 +296,17 @@ def run_exercises():
         students_data = [
             (1, "Alice", "Computer Science"),
             (2, "Bob", "Mathematics"),
-            (3, "Charlie", "Physics")
+            (3, "Charlie", "Physics"),
         ]
-        
+
         courses_data = [
             (1, "Data Structures", "A"),
             (2, "Calculus", "B"),
-            (4, "Chemistry", "A")  # Student 4 doesn't exist
+            (4, "Chemistry", "A"),  # Student 4 doesn't exist
         ]
-        
+
         result_4d = exercise_4d(spark, students_data, courses_data)
-        
+
         if result_4d is not None:
             print("Full outer join result (all students and courses):")
             result_4d.show()
@@ -310,9 +315,9 @@ def run_exercises():
             actual_cols = result_4d.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -320,19 +325,19 @@ def run_exercises():
     print("\n📝 Exercise 4e: Handle Null Values")
     try:
         # Use result from previous exercise which should have nulls
-        if 'result_4d' in locals() and result_4d is not None:
+        if "result_4d" in locals() and result_4d is not None:
             result_4e = exercise_4e(spark, result_4d)
-            
+
             if result_4e is not None:
                 print("DataFrame with null values handled:")
                 result_4e.show()
                 if "has_missing_data" in result_4e.columns:
                     print("✅ Missing data indicator column added!")
-                print(f"✅ Function executed successfully!")
+                print("✅ Function executed successfully!")
             else:
-                print(f"❌ Function returned None")
+                print("❌ Function returned None")
         else:
-            print(f"❌ No input DataFrame available (exercise_4d failed)")
+            print("❌ No input DataFrame available (exercise_4d failed)")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -342,28 +347,36 @@ def run_exercises():
         current_employees = [
             (1, "Alice", "Engineering", "2022-01-15"),
             (2, "Bob", "Marketing", "2022-03-20"),
-            (3, "Charlie", "Sales", "2021-11-10")
+            (3, "Charlie", "Sales", "2021-11-10"),
         ]
-        
+
         new_hires = [
             (4, "Diana", "Engineering", "2023-06-01"),
             (5, "Eve", "Marketing", "2023-06-15"),
-            (2, "Bob", "Marketing", "2022-03-20")  # Duplicate
+            (2, "Bob", "Marketing", "2022-03-20"),  # Duplicate
         ]
-        
+
         result_4f = exercise_4f(spark, current_employees, new_hires)
-        
+
         if result_4f is not None:
             print("Combined employees (union with employee type):")
             result_4f.show()
-            print(f"Row count: {result_4f.count()} (should be 5 after removing duplicates)")
-            expected_cols = ["emp_id", "name", "department", "start_date", "employee_type"]
+            print(
+                f"Row count: {result_4f.count()} (should be 5 after removing duplicates)"
+            )
+            expected_cols = [
+                "emp_id",
+                "name",
+                "department",
+                "start_date",
+                "employee_type",
+            ]
             actual_cols = result_4f.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 

@@ -20,20 +20,21 @@ Learning Goals:
 Run this file: python exercise_3.py
 """
 
-from pyspark.sql import SparkSession
-from pyspark import StorageLevel
-from typing import List, Tuple, Dict, Any
-import time
 import random
+import time
+from typing import Any, Dict, List, Tuple
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise3-AdvancedRDD") \
-        .master("local[*]") \
-        .config("spark.sql.adaptive.enabled", "true") \
+    return (
+        SparkSession.builder.appName("Exercise3-AdvancedRDD")
+        .master("local[*]")
+        .config("spark.sql.adaptive.enabled", "true")
         .getOrCreate()
+    )
 
 
 def generate_sales_data(num_records: int = 10000) -> List[Dict[str, Any]]:
@@ -50,7 +51,7 @@ def generate_sales_data(num_records: int = 10000) -> List[Dict[str, Any]]:
             "region": random.choice(regions),
             "amount": round(random.uniform(10, 1000), 2),
             "quantity": random.randint(1, 10),
-            "date": f"2023-{random.randint(1, 12):02d}-{random.randint(1, 28):02d}"
+            "date": f"2023-{random.randint(1, 12):02d}-{random.randint(1, 28):02d}",
         }
         sales_data.append(record)
 
@@ -75,10 +76,11 @@ def exercise_3a(spark: SparkSession, sales_data: List[Dict]) -> List[Tuple[str, 
     """
     # TODO: Implement this function
     # Hint: Use map to extract (category, amount) pairs, then reduceByKey
-    pass
 
 
-def exercise_3b(spark: SparkSession, sales_data: List[Dict]) -> Dict[str, Dict[str, float]]:
+def exercise_3b(
+    spark: SparkSession, sales_data: List[Dict]
+) -> Dict[str, Dict[str, float]]:
     """
     Create a sales summary by region and category.
 
@@ -104,7 +106,6 @@ def exercise_3b(spark: SparkSession, sales_data: List[Dict]) -> Dict[str, Dict[s
     """
     # TODO: Implement this function
     # Hint: Use map to create ((region, category), amount) pairs, then group and aggregate
-    pass
 
 
 def exercise_3c(spark: SparkSession, numbers: List[int]) -> List[Tuple[int, List[int]]]:
@@ -128,7 +129,6 @@ def exercise_3c(spark: SparkSession, numbers: List[int]) -> List[Tuple[int, List
     - Handle edge cases (0, negative numbers)
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:
@@ -151,7 +151,6 @@ def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:
     # TODO: Implement this function
     # Hint: You'll need to calculate mean first, then variance, then std dev
     # Cache the RDD before multiple operations
-    pass
 
 
 def exercise_3e(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, int]]:
@@ -177,7 +176,6 @@ def exercise_3e(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, in
     - Sort by count (descending)
     """
     # TODO: Implement this function
-    pass
 
 
 def exercise_3f(spark: SparkSession, data: List[int], k: int) -> List[int]:
@@ -200,10 +198,11 @@ def exercise_3f(spark: SparkSession, data: List[int], k: int) -> List[int]:
     """
     # TODO: Implement this function
     # Hint: Consider using sortBy or implementing a custom approach
-    pass
 
 
-def exercise_3g(spark: SparkSession, transactions: List[Dict]) -> List[Tuple[str, int, float]]:
+def exercise_3g(
+    spark: SparkSession, transactions: List[Dict]
+) -> List[Tuple[str, int, float]]:
     """
     Find customers with suspicious transaction patterns.
 
@@ -222,7 +221,6 @@ def exercise_3g(spark: SparkSession, transactions: List[Dict]) -> List[Tuple[str
     - Include customer_id, transaction count, and total amount
     """
     # TODO: Implement this function
-    pass
 
 
 def run_performance_comparison(spark: SparkSession):
@@ -238,17 +236,17 @@ def run_performance_comparison(spark: SparkSession):
     start_time = time.time()
     count = rdd.count()
     total = rdd.sum()
-    maximum = rdd.max()
-    minimum = rdd.min()
+    rdd.max()
+    rdd.min()
     no_cache_time = time.time() - start_time
 
     # With caching - same computations
     rdd.cache()
     start_time = time.time()
     count = rdd.count()  # This will cache the RDD
-    total = rdd.sum()    # These will use cached data
-    maximum = rdd.max()
-    minimum = rdd.min()
+    total = rdd.sum()  # These will use cached data
+    rdd.max()
+    rdd.min()
     cache_time = time.time() - start_time
 
     print(f"Without caching: {no_cache_time:.3f} seconds")
@@ -275,7 +273,7 @@ def run_exercises():
     try:
         result_3a = exercise_3a(spark, sales_data)
         print(f"Top 5 categories by sales: {result_3a[:5]}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -286,7 +284,7 @@ def run_exercises():
         print("Sample regional breakdown:")
         for region, categories in list(result_3b.items())[:2]:
             print(f"  {region}: {dict(list(categories.items())[:3])}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -298,7 +296,7 @@ def run_exercises():
         print("Factors:")
         for num, factors in result_3c:
             print(f"  {num}: {factors}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -312,7 +310,7 @@ def run_exercises():
         if result_3d[1] > 0:
             speedup = result_3d[0] / result_3d[1]
             print(f"Speedup: {speedup:.2f}x")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -323,12 +321,12 @@ def run_exercises():
         "evil live veil",
         "hello world",
         "silent listen",
-        "abc cab bca"
+        "abc cab bca",
     ]
     try:
         result_3e = exercise_3e(spark, test_text)
         print(f"Anagram groups: {result_3e}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -339,8 +337,8 @@ def run_exercises():
         result_3f = exercise_3f(spark, test_k_data, 5)
         print(f"Input: {test_k_data}")
         print(f"5 largest elements: {result_3f}")
-        print(f"Expected: [90, 88, 76, 64, 50]")
-        print(f"✅ Function executed successfully!")
+        print("Expected: [90, 88, 76, 64, 50]")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -349,7 +347,7 @@ def run_exercises():
     try:
         result_3g = exercise_3g(spark, sales_data)
         print(f"Suspicious customers (top 5): {result_3g[:5]}")
-        print(f"✅ Function executed successfully!")
+        print("✅ Function executed successfully!")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -358,7 +356,9 @@ def run_exercises():
 
     spark.stop()
     print("\n🎉 Exercise 3 completed!")
-    print("💡 This exercise demonstrated advanced RDD operations and performance optimization.")
+    print(
+        "💡 This exercise demonstrated advanced RDD operations and performance optimization."
+    )
     print("🎓 You've completed all the fundamental RDD exercises!")
     print("📚 Ready to move on to validation tests and Lesson 2!")
 

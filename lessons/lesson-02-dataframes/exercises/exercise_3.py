@@ -19,16 +19,18 @@ Learning Goals:
 Run this file: python exercise_3.py
 """
 
+from typing import List
+
 from pyspark.sql import SparkSession
-from typing import List, Tuple
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise3-SQLQueries") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise3-SQLQueries")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_3a(spark: SparkSession, employees_data: List[tuple]):
@@ -53,7 +55,6 @@ def exercise_3a(spark: SparkSession, employees_data: List[tuple]):
     # 2. Create temporary view using createOrReplaceTempView()
     # 3. Write SQL query using spark.sql()
     # 4. Return the result DataFrame
-    pass
 
 
 def exercise_3b(spark: SparkSession, df):
@@ -77,10 +78,11 @@ def exercise_3b(spark: SparkSession, df):
     # TODO: Implement this function
     # Write SQL query with GROUP BY and aggregation functions
     # Use ROUND() for avg_salary
-    pass
 
 
-def exercise_3c(spark: SparkSession, sales_data: List[tuple], products_data: List[tuple]):
+def exercise_3c(
+    spark: SparkSession, sales_data: List[tuple], products_data: List[tuple]
+):
     """
     Write SQL query with JOIN operations.
 
@@ -108,7 +110,6 @@ def exercise_3c(spark: SparkSession, sales_data: List[tuple], products_data: Lis
     # 2. Write SQL query with INNER JOIN
     # 3. Calculate total_amount in the SELECT clause
     # 4. Order by total_amount descending
-    pass
 
 
 def exercise_3d(spark: SparkSession):
@@ -130,7 +131,6 @@ def exercise_3d(spark: SparkSession):
     # TODO: Implement this function
     # Write SQL query using CASE WHEN statements for categories
     # Include WHERE clause for salary filter
-    pass
 
 
 def exercise_3e(spark: SparkSession, orders_data: List[tuple]):
@@ -155,7 +155,6 @@ def exercise_3e(spark: SparkSession, orders_data: List[tuple]):
     # 1. Create DataFrame and temporary view
     # 2. Use UPPER(), MONTH(), YEAR(), LENGTH() functions
     # 3. Filter for year 2023
-    pass
 
 
 def exercise_3f(spark: SparkSession):
@@ -177,7 +176,6 @@ def exercise_3f(spark: SparkSession):
     """
     # TODO: Implement this function
     # Use subquery in WHERE clause and SELECT clause
-    pass
 
 
 def run_exercises():
@@ -195,7 +193,7 @@ def run_exercises():
             ("Bob", 34, "Marketing", 75000),
             ("Charlie", 29, "Engineering", 90000),
             ("Diana", 31, "Sales", 70000),
-            ("Eve", 26, "Engineering", 88000)
+            ("Eve", 26, "Engineering", 88000),
         ]
 
         result_3a = exercise_3a(spark, employees_data)
@@ -204,9 +202,9 @@ def run_exercises():
             print("Employees older than 30, ordered by salary:")
             result_3a.show()
             print(f"Row count: {result_3a.count()}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -215,17 +213,23 @@ def run_exercises():
     try:
         # Use the same employees data, should have temp view from 3a
         result_3b = exercise_3b(spark, None)
-        
+
         if result_3b is not None:
             print("Department statistics:")
             result_3b.show()
-            expected_cols = ["department", "employee_count", "avg_salary", "max_salary", "min_salary"]
+            expected_cols = [
+                "department",
+                "employee_count",
+                "avg_salary",
+                "max_salary",
+                "min_salary",
+            ]
             actual_cols = result_3b.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -236,27 +240,33 @@ def run_exercises():
             (1, 101, 2, "2023-01-15"),
             (2, 102, 1, "2023-01-16"),
             (3, 101, 3, "2023-01-17"),
-            (4, 103, 1, "2023-01-18")
+            (4, 103, 1, "2023-01-18"),
         ]
-        
+
         products_data = [
             (101, "Laptop", "Electronics", 999.99),
             (102, "Book", "Education", 29.99),
-            (103, "Phone", "Electronics", 699.99)
+            (103, "Phone", "Electronics", 699.99),
         ]
-        
+
         result_3c = exercise_3c(spark, sales_data, products_data)
-        
+
         if result_3c is not None:
             print("Sales with product information:")
             result_3c.show()
-            expected_cols = ["product_name", "category", "quantity", "unit_price", "total_amount"]
+            expected_cols = [
+                "product_name",
+                "category",
+                "quantity",
+                "unit_price",
+                "total_amount",
+            ]
             actual_cols = result_3c.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -264,7 +274,7 @@ def run_exercises():
     print("\n📝 Exercise 3d: CASE Statements and WHERE Conditions")
     try:
         result_3d = exercise_3d(spark)
-        
+
         if result_3d is not None:
             print("Employees with categories (salary > 50000):")
             result_3d.show()
@@ -272,9 +282,9 @@ def run_exercises():
             actual_cols = result_3d.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -285,21 +295,27 @@ def run_exercises():
             ("ORD001", "Alice Johnson", "2023-03-15", 150.00),
             ("ORD002", "Bob Smith", "2023-06-20", 75.50),
             ("ORD003", "Charlie Brown", "2022-12-10", 200.00),
-            ("ORD004", "Diana Ross", "2023-09-05", 99.99)
+            ("ORD004", "Diana Ross", "2023-09-05", 99.99),
         ]
-        
+
         result_3e = exercise_3e(spark, orders_data)
-        
+
         if result_3e is not None:
             print("Orders with date/string functions (2023 only):")
             result_3e.show()
-            expected_cols = ["customer_name", "order_month", "order_year", "amount", "name_length"]
+            expected_cols = [
+                "customer_name",
+                "order_month",
+                "order_year",
+                "amount",
+                "name_length",
+            ]
             actual_cols = result_3e.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -307,7 +323,7 @@ def run_exercises():
     print("\n📝 Exercise 3f: SQL Subqueries")
     try:
         result_3f = exercise_3f(spark)
-        
+
         if result_3f is not None:
             print("Employees earning above average:")
             result_3f.show()
@@ -315,9 +331,9 @@ def run_exercises():
             actual_cols = result_3f.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 

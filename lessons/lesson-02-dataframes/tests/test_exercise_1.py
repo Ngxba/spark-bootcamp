@@ -7,7 +7,14 @@ These tests validate the solutions for Exercise 1.
 
 import pytest
 from pyspark.sql import SparkSession
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType
+from pyspark.sql.types import (
+    DoubleType,
+    IntegerType,
+    StringType,
+    StructField,
+    StructType,
+)
+
 from exercises.exercise_1 import *
 from solutions.exercise_1_solution import *
 
@@ -15,10 +22,9 @@ from solutions.exercise_1_solution import *
 @pytest.fixture(scope="module")
 def spark():
     """Create a Spark session for testing."""
-    spark = SparkSession.builder \
-        .appName("TestExercise1") \
-        .master("local[2]") \
-        .getOrCreate()
+    spark = (
+        SparkSession.builder.appName("TestExercise1").master("local[2]").getOrCreate()
+    )
     yield spark
     spark.stop()
 
@@ -47,7 +53,7 @@ class TestExercise1:
         """Test DataFrame creation from dictionaries."""
         dict_data = [
             {"name": "Alice", "age": 25, "salary": 50000},
-            {"name": "Bob", "age": 30, "salary": 60000}
+            {"name": "Bob", "age": 30, "salary": 60000},
         ]
 
         result_df, schema_string = exercise_1b(spark, dict_data)
@@ -84,9 +90,11 @@ class TestExercise1:
             ("Alice", 25, "Engineering", 80000),
             ("Bob", 30, "Marketing", 75000),
             ("Charlie", 35, "Engineering", 85000),
-            ("Diana", 28, "Sales", 70000)
+            ("Diana", 28, "Sales", 70000),
         ]
-        test_df = spark.createDataFrame(test_data, ["name", "age", "department", "salary"])
+        test_df = spark.createDataFrame(
+            test_data, ["name", "age", "department", "salary"]
+        )
 
         result = exercise_1d(spark, test_df)
 
@@ -96,7 +104,9 @@ class TestExercise1:
         # Should only have Engineering employees
         assert len(rows) == 2
         for row in rows:
-            assert "Engineering" in str(row)  # Check context since we only selected name and salary
+            assert "Engineering" in str(
+                row
+            )  # Check context since we only selected name and salary
 
         # Should be ordered by salary descending
         assert rows[0]["salary"] >= rows[1]["salary"]
@@ -131,7 +141,7 @@ class TestExercise1:
             ("Engineering", 85000),
             ("Marketing", 75000),
             ("Sales", 70000),
-            ("Sales", 72000)
+            ("Sales", 72000),
         ]
         test_df = spark.createDataFrame(test_data, ["department", "salary"])
 
@@ -164,10 +174,12 @@ class TestExercise1:
 
     def test_empty_dataframe(self, spark):
         """Test behavior with empty DataFrames."""
-        schema = StructType([
-            StructField("name", StringType(), True),
-            StructField("age", IntegerType(), True)
-        ])
+        schema = StructType(
+            [
+                StructField("name", StringType(), True),
+                StructField("age", IntegerType(), True),
+            ]
+        )
         empty_df = spark.createDataFrame([], schema)
 
         assert empty_df.count() == 0
@@ -186,9 +198,11 @@ class TestExercise1:
         df_with_calcs = df.withColumn("annual_salary", df.salary * 12)
 
         # Filter and aggregate
-        result = df_with_calcs.filter(df_with_calcs.age >= 30) \
-                             .groupBy() \
-                             .agg({"annual_salary": "avg"})
+        result = (
+            df_with_calcs.filter(df_with_calcs.age >= 30)
+            .groupBy()
+            .agg({"annual_salary": "avg"})
+        )
 
         assert result.count() == 1
         avg_annual = result.collect()[0]["avg(annual_salary)"]

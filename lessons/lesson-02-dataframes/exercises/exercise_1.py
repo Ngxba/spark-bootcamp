@@ -19,19 +19,19 @@ Learning Goals:
 Run this file: python exercise_1.py
 """
 
-from pyspark.sql import SparkSession
-from pyspark.sql.functions import col, upper, length, when, count, avg, sum as spark_sum, max as spark_max, desc
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType, DoubleType
-from typing import List, Dict, Any
 import os
+from typing import Any, Dict, List
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise1-DataFrameBasics") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise1-DataFrameBasics")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_1a(spark: SparkSession, data: List[tuple], columns: List[str]):
@@ -52,7 +52,6 @@ def exercise_1a(spark: SparkSession, data: List[tuple], columns: List[str]):
     """
     # TODO: Implement this function
     # Use spark.createDataFrame() with data and columns
-    pass
 
 
 def exercise_1b(spark: SparkSession, dict_data: List[Dict[str, Any]]):
@@ -75,7 +74,6 @@ def exercise_1b(spark: SparkSession, dict_data: List[Dict[str, Any]]):
     # 1. Create DataFrame from dict_data
     # 2. Get schema string using df.schema.simpleString()
     # 3. Return tuple of (DataFrame, schema_string)
-    pass
 
 
 def exercise_1c(spark: SparkSession, data: List[tuple]):
@@ -98,7 +96,6 @@ def exercise_1c(spark: SparkSession, data: List[tuple]):
     # 1. Define StructType schema with StructField for each column
     # 2. Create DataFrame using spark.createDataFrame(data, schema)
     # 3. Return the DataFrame
-    pass
 
 
 def exercise_1d(spark: SparkSession, df):
@@ -120,7 +117,6 @@ def exercise_1d(spark: SparkSession, df):
     # 2. Select only "name" and "salary" columns
     # 3. Order by salary descending
     # 4. Return the filtered and transformed DataFrame
-    pass
 
 
 def exercise_1e(spark: SparkSession, df):
@@ -144,7 +140,6 @@ def exercise_1e(spark: SparkSession, df):
     # 2. Add age_category column using when().otherwise()
     # 3. Add name_length column using length() function
     # 4. Return DataFrame with all original + new columns
-    pass
 
 
 def exercise_1f(spark: SparkSession, df):
@@ -170,7 +165,6 @@ def exercise_1f(spark: SparkSession, df):
     # 2. Calculate count, avg, max, and sum aggregations
     # 3. Order by average salary descending
     # 4. Return aggregated DataFrame
-    pass
 
 
 def create_sample_data():
@@ -212,9 +206,9 @@ def run_exercises():
             result_1a.show()
             print(f"Row count: {result_1a.count()}")
             print(f"Columns: {result_1a.columns}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -223,7 +217,7 @@ def run_exercises():
     try:
         dict_data = [
             {"name": "Alice", "age": 25, "salary": 50000},
-            {"name": "Bob", "age": 30, "salary": 60000}
+            {"name": "Bob", "age": 30, "salary": 60000},
         ]
         result_1b = exercise_1b(spark, dict_data)
 
@@ -232,9 +226,9 @@ def run_exercises():
             print("DataFrame created successfully:")
             df.show()
             print(f"Schema: {schema_str}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function should return (DataFrame, schema_string) tuple")
+            print("❌ Function should return (DataFrame, schema_string) tuple")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -248,9 +242,9 @@ def run_exercises():
             print("DataFrame with explicit schema:")
             result_1c.show()
             result_1c.printSchema()
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -262,9 +256,11 @@ def run_exercises():
             ("Alice", 25, "Engineering", 80000),
             ("Bob", 30, "Marketing", 75000),
             ("Charlie", 35, "Engineering", 85000),
-            ("Diana", 28, "Sales", 70000)
+            ("Diana", 28, "Sales", 70000),
         ]
-        test_df = spark.createDataFrame(test_data, ["name", "age", "department", "salary"])
+        test_df = spark.createDataFrame(
+            test_data, ["name", "age", "department", "salary"]
+        )
 
         result_1d = exercise_1d(spark, test_df)
 
@@ -273,9 +269,9 @@ def run_exercises():
             result_1d.show()
             print(f"Row count: {result_1d.count()}")
             print(f"Columns: {result_1d.columns}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -290,13 +286,20 @@ def run_exercises():
         if result_1e is not None:
             print("DataFrame with calculated columns:")
             result_1e.show()
-            expected_cols = ["name", "age", "salary", "annual_salary", "age_category", "name_length"]
+            expected_cols = [
+                "name",
+                "age",
+                "salary",
+                "annual_salary",
+                "age_category",
+                "name_length",
+            ]
             actual_cols = result_1e.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -308,7 +311,7 @@ def run_exercises():
             ("Engineering", 85000),
             ("Marketing", 75000),
             ("Sales", 70000),
-            ("Sales", 72000)
+            ("Sales", 72000),
         ]
         test_df = spark.createDataFrame(test_data, ["department", "salary"])
 
@@ -317,19 +320,27 @@ def run_exercises():
         if result_1f is not None:
             print("Department aggregations:")
             result_1f.show()
-            expected_cols = ["department", "employee_count", "avg_salary", "max_salary", "total_payroll"]
+            expected_cols = [
+                "department",
+                "employee_count",
+                "avg_salary",
+                "max_salary",
+                "total_payroll",
+            ]
             actual_cols = result_1f.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
     spark.stop()
     print("\n🎉 Exercise 1 completed!")
-    print("💡 If you got any errors, review the function implementations and try again.")
+    print(
+        "💡 If you got any errors, review the function implementations and try again."
+    )
     print("📚 Ready to move on to Exercise 2!")
 
 

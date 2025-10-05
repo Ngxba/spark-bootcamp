@@ -19,25 +19,18 @@ Learning Goals:
 Run this file: python exercise_5.py
 """
 
+from typing import List
+
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import (
-    col, when, upper, lower, length, substring, concat, concat_ws,
-    round as spark_round, abs as spark_abs, sqrt,
-    current_date, current_timestamp, date_add, year, month, dayofmonth,
-    split, regexp_replace, regexp_extract, trim,
-    array, create_map, explode, size,
-    cast, to_date, date_format
-)
-from pyspark.sql.types import IntegerType, DoubleType, DateType
-from typing import List, Tuple
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise5-ColumnFunctions") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise5-ColumnFunctions")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_5a(spark: SparkSession, people_data: List[tuple]):
@@ -62,7 +55,6 @@ def exercise_5a(spark: SparkSession, people_data: List[tuple]):
     # Use split(), substring(), regexp_extract(), regexp_replace() functions
     # Hint: For email domain, use regexp_extract with pattern r'@(.+)'
     # Hint: For phone cleaning, use regexp_replace to remove non-digits
-    pass
 
 
 def exercise_5b(spark: SparkSession, sales_data: List[tuple]):
@@ -85,7 +77,6 @@ def exercise_5b(spark: SparkSession, sales_data: List[tuple]):
     """
     # TODO: Implement this function
     # Use arithmetic operations, round(), and when() functions
-    pass
 
 
 def exercise_5c(spark: SparkSession, events_data: List[tuple]):
@@ -111,7 +102,6 @@ def exercise_5c(spark: SparkSession, events_data: List[tuple]):
     # TODO: Implement this function
     # Use to_date(), year(), month(), dayofmonth(), date_add(), current_date()
     # For days_until_event, use datediff() function
-    pass
 
 
 def exercise_5d(spark: SparkSession, products_data: List[tuple]):
@@ -138,7 +128,6 @@ def exercise_5d(spark: SparkSession, products_data: List[tuple]):
     # TODO: Implement this function
     # Use split(), cast(), size(), array functions
     # For avg_rating, you'll need to work with array elements
-    pass
 
 
 def exercise_5e(spark: SparkSession, customers_data: List[tuple]):
@@ -163,7 +152,6 @@ def exercise_5e(spark: SparkSession, customers_data: List[tuple]):
     """
     # TODO: Implement this function
     # Use nested when() statements and concat() for complex conditions
-    pass
 
 
 def exercise_5f(spark: SparkSession, orders_data: List[tuple]):
@@ -191,7 +179,6 @@ def exercise_5f(spark: SparkSession, orders_data: List[tuple]):
     # TODO: Implement this function
     # Combine multiple transformations and apply filters
     # Use date_format() for order_month_year formatting
-    pass
 
 
 def run_exercises():
@@ -207,7 +194,7 @@ def run_exercises():
         people_data = [
             ("John Smith", "john.smith@email.com", "(555) 123-4567"),
             ("Jane Doe", "jane.doe@company.org", "555.987.6543"),
-            ("Bob Johnson", "bob@test.net", "555-111-2222")
+            ("Bob Johnson", "bob@test.net", "555-111-2222"),
         ]
 
         result_5a = exercise_5a(spark, people_data)
@@ -215,13 +202,19 @@ def run_exercises():
         if result_5a is not None:
             print("String transformations result:")
             result_5a.show(truncate=False)
-            expected_new_cols = ["first_name", "last_name", "name_length", "email_domain", "phone_clean"]
+            expected_new_cols = [
+                "first_name",
+                "last_name",
+                "name_length",
+                "email_domain",
+                "phone_clean",
+            ]
             actual_cols = result_5a.columns
             print(f"Expected new columns: {expected_new_cols}")
             print(f"All columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -232,21 +225,27 @@ def run_exercises():
             ("Laptop", 2, 999.99, 0.1),
             ("Mouse", 5, 25.50, 0.05),
             ("Keyboard", 12, 75.00, 0.15),
-            ("Monitor", 1, 299.99, 0.08)
+            ("Monitor", 1, 299.99, 0.08),
         ]
-        
+
         result_5b = exercise_5b(spark, sales_data)
-        
+
         if result_5b is not None:
             print("Numeric calculations result:")
             result_5b.show()
-            expected_new_cols = ["gross_amount", "discount_amount", "net_amount", "price_category", "quantity_group"]
+            expected_new_cols = [
+                "gross_amount",
+                "discount_amount",
+                "net_amount",
+                "price_category",
+                "quantity_group",
+            ]
             actual_cols = result_5b.columns
             print(f"Expected new columns: {expected_new_cols}")
             print(f"All columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -256,21 +255,29 @@ def run_exercises():
         events_data = [
             ("Conference", "2024-06-15", 3),
             ("Workshop", "2023-12-01", 1),
-            ("Meeting", "2024-01-30", 0)
+            ("Meeting", "2024-01-30", 0),
         ]
-        
+
         result_5c = exercise_5c(spark, events_data)
-        
+
         if result_5c is not None:
             print("Date transformations result:")
             result_5c.show()
-            expected_new_cols = ["event_date", "event_year", "event_month", "event_day", "end_date", "days_until_event", "is_future_event"]
+            expected_new_cols = [
+                "event_date",
+                "event_year",
+                "event_month",
+                "event_day",
+                "end_date",
+                "days_until_event",
+                "is_future_event",
+            ]
             actual_cols = result_5c.columns
             print(f"Expected new columns: {expected_new_cols}")
             print(f"All columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -280,21 +287,28 @@ def run_exercises():
         products_data = [
             ("iPhone", "electronics,mobile,smartphone", "4.5,4.2,4.8"),
             ("Book", "education,reading", "4.0,4.1"),
-            ("Laptop", "electronics,computer,mobile", "4.3,4.6,4.4,4.5")
+            ("Laptop", "electronics,computer,mobile", "4.3,4.6,4.4,4.5"),
         ]
-        
+
         result_5d = exercise_5d(spark, products_data)
-        
+
         if result_5d is not None:
             print("Array and complex data transformations:")
             result_5d.show(truncate=False)
-            expected_new_cols = ["tags_array", "ratings_array", "tag_count", "avg_rating", "top_tag", "has_mobile_tag"]
+            expected_new_cols = [
+                "tags_array",
+                "ratings_array",
+                "tag_count",
+                "avg_rating",
+                "top_tag",
+                "has_mobile_tag",
+            ]
             actual_cols = result_5d.columns
             print(f"Expected new columns: {expected_new_cols}")
             print(f"All columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -305,21 +319,27 @@ def run_exercises():
             (1, 25, 85000, 15, 20),
             (2, 45, 55000, 8, 45),
             (3, 60, 35000, 3, 120),
-            (4, 35, 95000, 25, 10)
+            (4, 35, 95000, 25, 10),
         ]
-        
+
         result_5e = exercise_5e(spark, customers_data)
-        
+
         if result_5e is not None:
             print("Customer categorization result:")
             result_5e.show()
-            expected_new_cols = ["age_group", "income_level", "customer_value", "retention_risk", "marketing_segment"]
+            expected_new_cols = [
+                "age_group",
+                "income_level",
+                "customer_value",
+                "retention_risk",
+                "marketing_segment",
+            ]
             actual_cols = result_5e.columns
             print(f"Expected new columns: {expected_new_cols}")
             print(f"All columns: {actual_cols}")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 
@@ -330,22 +350,32 @@ def run_exercises():
             ("ORD001", "alice@company.com", "250.50", "2023-11-15", " completed "),
             ("ORD002", "bob@email.org", "750.00", "2023-12-01", "PENDING"),
             ("ORD003", None, "0.00", "2023-10-20", "cancelled"),
-            ("ORD004", "charlie@test.net", "125.75", "2023-11-30", "COMPLETED")
+            ("ORD004", "charlie@test.net", "125.75", "2023-11-30", "COMPLETED"),
         ]
-        
+
         result_5f = exercise_5f(spark, orders_data)
-        
+
         if result_5f is not None:
             print("Complete processing pipeline result:")
             result_5f.show()
-            expected_cols = ["order_id", "customer_domain", "order_total", "order_date", "order_month_year", "total_category", "status_clean", "is_completed", "order_age_days"]
+            expected_cols = [
+                "order_id",
+                "customer_domain",
+                "order_total",
+                "order_date",
+                "order_month_year",
+                "total_category",
+                "status_clean",
+                "is_completed",
+                "order_age_days",
+            ]
             actual_cols = result_5f.columns
             print(f"Expected columns: {expected_cols}")
             print(f"Actual columns: {actual_cols}")
             print(f"Row count: {result_5f.count()} (should exclude invalid orders)")
-            print(f"✅ Function executed successfully!")
+            print("✅ Function executed successfully!")
         else:
-            print(f"❌ Function returned None")
+            print("❌ Function returned None")
     except Exception as e:
         print(f"❌ Error: {e}")
 

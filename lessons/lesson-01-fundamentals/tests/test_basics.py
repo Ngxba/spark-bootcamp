@@ -9,17 +9,14 @@ Run tests: python -m pytest test_basics.py -v
 """
 
 import pytest
-from pyspark.sql import SparkSession
 from pyspark import SparkContext
+from pyspark.sql import SparkSession
 
 
 @pytest.fixture(scope="module")
 def spark():
     """Create a Spark session for testing."""
-    spark = SparkSession.builder \
-        .appName("TestBasics") \
-        .master("local[2]") \
-        .getOrCreate()
+    spark = SparkSession.builder.appName("TestBasics").master("local[2]").getOrCreate()
     yield spark
     spark.stop()
 
@@ -162,9 +159,11 @@ class TestTransformations:
         data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         rdd = sc.parallelize(data)
 
-        result = rdd.filter(lambda x: x % 2 == 0) \
-                   .map(lambda x: x * x) \
-                   .filter(lambda x: x > 10)
+        result = (
+            rdd.filter(lambda x: x % 2 == 0)
+            .map(lambda x: x * x)
+            .filter(lambda x: x > 10)
+        )
 
         assert result.collect() == [16, 36, 64, 100]
 
@@ -377,6 +376,7 @@ class TestCaching:
 
         # Persist with memory only
         from pyspark import StorageLevel
+
         rdd.persist(StorageLevel.MEMORY_ONLY)
 
         # Force materialization

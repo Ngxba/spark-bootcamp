@@ -6,21 +6,22 @@ This file contains the complete solutions for Exercise 3.
 Study these solutions to understand advanced RDD patterns and performance optimization.
 """
 
-from pyspark.sql import SparkSession
-from pyspark import StorageLevel
-from typing import List, Tuple, Dict, Any
-import time
 import math
+import time
 from collections import defaultdict
+from typing import Dict, List, Tuple
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise3-Solutions") \
-        .master("local[*]") \
-        .config("spark.sql.adaptive.enabled", "true") \
+    return (
+        SparkSession.builder.appName("Exercise3-Solutions")
+        .master("local[*]")
+        .config("spark.sql.adaptive.enabled", "true")
         .getOrCreate()
+    )
 
 
 def exercise_3a(spark: SparkSession, sales_data: List[Dict]) -> List[Tuple[str, float]]:
@@ -31,15 +32,19 @@ def exercise_3a(spark: SparkSession, sales_data: List[Dict]) -> List[Tuple[str, 
     sales_rdd = spark.sparkContext.parallelize(sales_data)
 
     # Extract category and amount, then sum by category
-    category_sales = sales_rdd.map(lambda record: (record['product_category'], record['amount'])) \
-                             .reduceByKey(lambda a, b: a + b) \
-                             .sortBy(lambda x: x[1], ascending=False) \
-                             .collect()
+    category_sales = (
+        sales_rdd.map(lambda record: (record["product_category"], record["amount"]))
+        .reduceByKey(lambda a, b: a + b)
+        .sortBy(lambda x: x[1], ascending=False)
+        .collect()
+    )
 
     return category_sales
 
 
-def exercise_3b(spark: SparkSession, sales_data: List[Dict]) -> Dict[str, Dict[str, float]]:
+def exercise_3b(
+    spark: SparkSession, sales_data: List[Dict]
+) -> Dict[str, Dict[str, float]]:
     """
     Create a sales summary by region and category.
     """
@@ -47,9 +52,16 @@ def exercise_3b(spark: SparkSession, sales_data: List[Dict]) -> Dict[str, Dict[s
     sales_rdd = spark.sparkContext.parallelize(sales_data)
 
     # Create (region, category) -> amount pairs and aggregate
-    region_category_sales = sales_rdd.map(lambda record: ((record['region'], record['product_category']), record['amount'])) \
-                                    .reduceByKey(lambda a, b: a + b) \
-                                    .collect()
+    region_category_sales = (
+        sales_rdd.map(
+            lambda record: (
+                (record["region"], record["product_category"]),
+                record["amount"],
+            )
+        )
+        .reduceByKey(lambda a, b: a + b)
+        .collect()
+    )
 
     # Convert to nested dictionary structure
     result = defaultdict(dict)
@@ -63,6 +75,7 @@ def exercise_3c(spark: SparkSession, numbers: List[int]) -> List[Tuple[int, List
     """
     Find all factors for each number in the list.
     """
+
     def find_factors(n):
         if n == 0:
             return []
@@ -99,7 +112,7 @@ def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:
 
     # Calculate variance (another pass through data)
     variance = data_rdd.map(lambda x: (x - mean) ** 2).sum() / count
-    std_dev = math.sqrt(variance)
+    math.sqrt(variance)
 
     time_without_cache = time.time() - start_time
 
@@ -115,7 +128,7 @@ def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:
 
     # Use cached data for variance calculation
     variance = data_rdd_cached.map(lambda x: (x - mean) ** 2).sum() / count
-    std_dev = math.sqrt(variance)
+    math.sqrt(variance)
 
     time_with_cache = time.time() - start_time
 
@@ -133,18 +146,22 @@ def exercise_3e(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, in
     text_rdd = spark.sparkContext.parallelize(text_data)
 
     # Extract words and create anagram signatures
-    words_rdd = text_rdd.flatMap(lambda line: line.split()) \
-                        .map(lambda word: ''.join(filter(str.isalpha, word.lower()))) \
-                        .filter(lambda word: len(word) > 0)
+    words_rdd = (
+        text_rdd.flatMap(lambda line: line.split())
+        .map(lambda word: "".join(filter(str.isalpha, word.lower())))
+        .filter(lambda word: len(word) > 0)
+    )
 
     # Create (sorted_letters, word) pairs and group by anagram signature
-    anagram_groups = words_rdd.map(lambda word: (''.join(sorted(word)), word)) \
-                             .groupByKey() \
-                             .mapValues(lambda words: list(set(words))) \
-                             .filter(lambda x: len(x[1]) > 1) \
-                             .map(lambda x: (x[0], len(x[1]))) \
-                             .sortBy(lambda x: x[1], ascending=False) \
-                             .collect()
+    anagram_groups = (
+        words_rdd.map(lambda word: ("".join(sorted(word)), word))
+        .groupByKey()
+        .mapValues(lambda words: list(set(words)))
+        .filter(lambda x: len(x[1]) > 1)
+        .map(lambda x: (x[0], len(x[1])))
+        .sortBy(lambda x: x[1], ascending=False)
+        .collect()
+    )
 
     return anagram_groups
 
@@ -157,14 +174,14 @@ def exercise_3f(spark: SparkSession, data: List[int], k: int) -> List[int]:
     data_rdd = spark.sparkContext.parallelize(data)
 
     # Sort in descending order and take k elements
-    k_largest = data_rdd.distinct() \
-                       .sortBy(lambda x: x, ascending=False) \
-                       .take(k)
+    k_largest = data_rdd.distinct().sortBy(lambda x: x, ascending=False).take(k)
 
     return k_largest
 
 
-def exercise_3g(spark: SparkSession, transactions: List[Dict]) -> List[Tuple[str, int, float]]:
+def exercise_3g(
+    spark: SparkSession, transactions: List[Dict]
+) -> List[Tuple[str, int, float]]:
     """
     Find customers with suspicious transaction patterns.
     """
@@ -172,15 +189,19 @@ def exercise_3g(spark: SparkSession, transactions: List[Dict]) -> List[Tuple[str
     transactions_rdd = spark.sparkContext.parallelize(transactions)
 
     # Group by customer and calculate statistics
-    customer_stats = transactions_rdd.map(lambda t: (t['customer_id'], (t['amount'], 1))) \
-                                   .reduceByKey(lambda a, b: (a[0] + b[0], a[1] + b[1])) \
-                                   .map(lambda x: (x[0], x[1][1], x[1][0], x[1][0] / x[1][1]))  # (customer, count, total, avg)
+    customer_stats = (
+        transactions_rdd.map(lambda t: (t["customer_id"], (t["amount"], 1)))
+        .reduceByKey(lambda a, b: (a[0] + b[0], a[1] + b[1]))
+        .map(lambda x: (x[0], x[1][1], x[1][0], x[1][0] / x[1][1]))
+    )  # (customer, count, total, avg)
 
     # Filter suspicious customers
-    suspicious = customer_stats.filter(lambda x: (x[1] > 10 and x[2] > 5000) or x[3] > 800) \
-                              .map(lambda x: (x[0], x[1], x[2])) \
-                              .sortBy(lambda x: x[2], ascending=False) \
-                              .collect()
+    suspicious = (
+        customer_stats.filter(lambda x: (x[1] > 10 and x[2] > 5000) or x[3] > 800)
+        .map(lambda x: (x[0], x[1], x[2]))
+        .sortBy(lambda x: x[2], ascending=False)
+        .collect()
+    )
 
     return suspicious
 
@@ -194,6 +215,7 @@ def run_solutions():
 
     # Generate sample data
     from exercise_3 import generate_sales_data
+
     sales_data = generate_sales_data(1000)
 
     # Solution 3a
@@ -237,7 +259,7 @@ def run_solutions():
         "evil live veil",
         "hello world",
         "silent listen",
-        "abc cab bca"
+        "abc cab bca",
     ]
     result_3e = exercise_3e(spark, test_text)
     print("Anagram groups:")

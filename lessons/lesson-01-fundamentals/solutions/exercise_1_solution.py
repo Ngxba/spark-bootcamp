@@ -6,16 +6,18 @@ This file contains the complete solutions for Exercise 1.
 Study these solutions to understand the correct implementation patterns.
 """
 
-from pyspark.sql import SparkSession
 from typing import List, Tuple
+
+from pyspark.sql import SparkSession
 
 
 def setup_spark() -> SparkSession:
     """Create and return a Spark session for the exercises."""
-    return SparkSession.builder \
-        .appName("Exercise1-Solutions") \
-        .master("local[*]") \
+    return (
+        SparkSession.builder.appName("Exercise1-Solutions")
+        .master("local[*]")
         .getOrCreate()
+    )
 
 
 def exercise_1a(spark: SparkSession, numbers: List[int]) -> List[int]:
@@ -67,17 +69,21 @@ def exercise_1d(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, in
     text_rdd = spark.sparkContext.parallelize(text_data)
 
     # Split lines into words, convert to lowercase, create pairs, count, and sort
-    word_counts = text_rdd.flatMap(lambda line: line.split()) \
-                          .map(lambda word: word.lower()) \
-                          .map(lambda word: (word, 1)) \
-                          .reduceByKey(lambda a, b: a + b) \
-                          .sortByKey() \
-                          .collect()
+    word_counts = (
+        text_rdd.flatMap(lambda line: line.split())
+        .map(lambda word: word.lower())
+        .map(lambda word: (word, 1))
+        .reduceByKey(lambda a, b: a + b)
+        .sortByKey()
+        .collect()
+    )
 
     return word_counts
 
 
-def exercise_1e(spark: SparkSession, numbers: List[int], num_partitions: int) -> List[List[int]]:
+def exercise_1e(
+    spark: SparkSession, numbers: List[int], num_partitions: int
+) -> List[List[int]]:
     """
     Create an RDD with specified number of partitions and return the partition contents.
     """
@@ -90,7 +96,9 @@ def exercise_1e(spark: SparkSession, numbers: List[int], num_partitions: int) ->
     return partition_contents
 
 
-def exercise_1f(spark: SparkSession, pairs: List[Tuple[str, int]]) -> List[Tuple[str, int]]:
+def exercise_1f(
+    spark: SparkSession, pairs: List[Tuple[str, int]]
+) -> List[Tuple[str, int]]:
     """
     Work with key-value pairs: group by key and sum the values.
     """
@@ -98,9 +106,7 @@ def exercise_1f(spark: SparkSession, pairs: List[Tuple[str, int]]) -> List[Tuple
     pairs_rdd = spark.sparkContext.parallelize(pairs)
 
     # Sum values by key, sort by key, and collect
-    summed_pairs = pairs_rdd.reduceByKey(lambda a, b: a + b) \
-                           .sortByKey() \
-                           .collect()
+    summed_pairs = pairs_rdd.reduceByKey(lambda a, b: a + b).sortByKey().collect()
 
     return summed_pairs
 
@@ -149,7 +155,13 @@ def run_solutions():
 
     # Solution 1f
     print("\n1f. Key-Value Pairs")
-    test_pairs = [("apple", 1), ("banana", 2), ("apple", 3), ("cherry", 1), ("banana", 4)]
+    test_pairs = [
+        ("apple", 1),
+        ("banana", 2),
+        ("apple", 3),
+        ("cherry", 1),
+        ("banana", 4),
+    ]
     result_1f = exercise_1f(spark, test_pairs)
     print(f"Input: {test_pairs}")
     print(f"Summed by key: {result_1f}")
