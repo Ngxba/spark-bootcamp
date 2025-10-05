@@ -3,7 +3,7 @@ Base data aggregation transformations for Spark DataFrames.
 This module provides generic, reusable aggregation functions that can be applied across domains.
 """
 
-from typing import Dict, List
+from typing import Dict, List, Optional
 from pyspark.sql import DataFrame
 from pyspark.sql.functions import (
     col,
@@ -70,7 +70,7 @@ class BaseDataAggregator:
 
     @staticmethod
     def count_by_group(
-        df: DataFrame, group_cols: List[str], count_col: str = None
+        df: DataFrame, group_cols: List[str], count_col: Optional[str] = None
     ) -> DataFrame:
         """
         Count records by group.
@@ -115,7 +115,7 @@ class BaseDataAggregator:
         df: DataFrame,
         date_col: str,
         time_unit: str = "day",
-        value_cols: List[str] = None,
+        value_cols: Optional[List[str]] = None,
     ) -> DataFrame:
         """
         Aggregate data by time periods.

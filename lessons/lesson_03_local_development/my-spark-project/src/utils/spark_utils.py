@@ -152,7 +152,7 @@ class SparkUtils:
         }
 
         # Sample data for further analysis
-        sample_df = df.limit(sample_size)
+        df = df.limit(sample_size)
 
         # Null analysis
         null_counts = {}
@@ -280,7 +280,6 @@ class SparkUtils:
         Returns:
             Spark UI URL
         """
-        app_id = spark.sparkContext.applicationId
         ui_web_url = spark.sparkContext.uiWebUrl
         return f"{ui_web_url}" if ui_web_url else "http://localhost:4040"
 

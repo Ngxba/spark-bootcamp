@@ -21,6 +21,7 @@ from pyspark.sql.functions import (
     month,
     dayofweek,
     quarter,
+    row_number,
 )
 from pyspark.sql.window import Window
 
@@ -220,9 +221,6 @@ class DataAggregator:
             spark_sum("total_amount").alias("monetary"),
             spark_max("transaction_date").alias("last_purchase"),
         )
-
-        # Define window for percentile calculations
-        window = Window.orderBy("monetary")
 
         # Add RFM scores (simplified version)
         customer_rfm = customer_metrics.withColumn(

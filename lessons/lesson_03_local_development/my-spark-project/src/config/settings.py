@@ -314,6 +314,7 @@ class ConfigManager:
         if self._config is None:
             self.load_config()
 
+        assert self._config is not None
         config_dict = self._config.to_dict()
         FileUtils.write_yaml_file(config_dict, file_path)
 

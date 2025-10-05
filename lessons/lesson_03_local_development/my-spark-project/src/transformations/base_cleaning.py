@@ -215,7 +215,10 @@ class BaseDataCleaner:
 
     @staticmethod
     def validate_numeric_range(
-        df: DataFrame, column: str, min_value: float = None, max_value: float = None
+        df: DataFrame,
+        column: str,
+        min_value: Optional[float] = None,
+        max_value: Optional[float] = None,
     ) -> DataFrame:
         """
         Validate numeric values are within specified range.

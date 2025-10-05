@@ -48,40 +48,46 @@ class ETLJob(BaseSparkJob):
         """
         self.logger.info("Reading source data with schema validation")
 
+        if self.spark is None:
+            raise ValueError("Spark session is not initialized")
+
         dataframes = {}
 
         # Read customers data with predefined schema
         customers_path = self.input_paths.get("customers", "data/customers.csv")
         if FileUtils.file_exists(customers_path):
             self.logger.info(f"Reading customers data from {customers_path}")
-            dataframes["customers"] = (
+            customers_df = (
                 self.spark.read.option("header", "true")
                 .schema(CustomerSchema.get_schema())
                 .csv(customers_path)
             )
-            self.logger.info(f"Read {dataframes['customers'].count()} customer records")
+            dataframes["customers"] = customers_df
+            self.logger.info(f"Read {customers_df.count()} customer records")
 
         # Read products data with predefined schema
         products_path = self.input_paths.get("products", "data/products.csv")
         if FileUtils.file_exists(products_path):
             self.logger.info(f"Reading products data from {products_path}")
-            dataframes["products"] = (
+            products_df = (
                 self.spark.read.option("header", "true")
                 .schema(ProductSchema.get_schema())
                 .csv(products_path)
             )
-            self.logger.info(f"Read {dataframes['products'].count()} product records")
+            dataframes["products"] = products_df
+            self.logger.info(f"Read {products_df.count()} product records")
 
         # Read sales data with predefined schema
         sales_path = self.input_paths.get("sales", "data/sales.csv")
         if FileUtils.file_exists(sales_path):
             self.logger.info(f"Reading sales data from {sales_path}")
-            dataframes["sales"] = (
+            sales_df = (
                 self.spark.read.option("header", "true")
                 .schema(SalesSchema.get_schema())
                 .csv(sales_path)
             )
-            self.logger.info(f"Read {dataframes['sales'].count()} sales records")
+            dataframes["sales"] = sales_df
+            self.logger.info(f"Read {sales_df.count()} sales records")
 
         return dataframes
 

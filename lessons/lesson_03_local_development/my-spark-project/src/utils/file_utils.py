@@ -5,7 +5,7 @@ This module provides helper functions for file operations and path management.
 
 import os
 import json
-import yaml
+import yaml  # type: ignore[import-untyped]
 from typing import Dict, Any, List, Optional
 from pathlib import Path
 

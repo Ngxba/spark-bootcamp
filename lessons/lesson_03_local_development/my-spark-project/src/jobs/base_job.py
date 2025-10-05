@@ -31,7 +31,7 @@ class BaseSparkJob(ABC):
         """
         self.app_name = app_name
         self.config = config or {}
-        self.spark: Optional[SparkSession] = None
+        self.spark = None
         self.logger = self._setup_logging()
 
     def _setup_logging(self) -> logging.Logger:
