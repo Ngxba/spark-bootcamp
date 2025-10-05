@@ -32,7 +32,7 @@ def setup_spark() -> SparkSession:
     )
 
 
-def exercise_1a(spark: SparkSession, numbers: List[int]) -> List[int]:
+def exercise_1a(spark: SparkSession, numbers: List[int]) -> List[int]:  # type: ignore
     """
     Create an RDD from the given list of numbers and return all even numbers.
 
@@ -55,7 +55,7 @@ def exercise_1a(spark: SparkSession, numbers: List[int]) -> List[int]:
     pass
 
 
-def exercise_1b(spark: SparkSession, words: List[str]) -> int:
+def exercise_1b(spark: SparkSession, words: List[str]) -> int:  # type: ignore
     """
     Count the total number of characters across all words.
 
@@ -78,7 +78,7 @@ def exercise_1b(spark: SparkSession, words: List[str]) -> int:
     pass
 
 
-def exercise_1c(spark: SparkSession, data: List[int]) -> Tuple[int, int, float]:
+def exercise_1c(spark: SparkSession, data: List[int]) -> Tuple[int, int, float]:  # type: ignore
     """
     Calculate statistics for the given data: count, sum, and average.
 
@@ -101,7 +101,7 @@ def exercise_1c(spark: SparkSession, data: List[int]) -> Tuple[int, int, float]:
     pass
 
 
-def exercise_1d(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, int]]:
+def exercise_1d(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, int]]:  # type: ignore
     """
     Perform word count on the given text data.
 
@@ -127,7 +127,7 @@ def exercise_1d(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, in
     pass
 
 
-def exercise_1e(
+def exercise_1e(  # type: ignore
     spark: SparkSession, numbers: List[int], num_partitions: int
 ) -> List[List[int]]:
     """
@@ -153,7 +153,7 @@ def exercise_1e(
     pass
 
 
-def exercise_1f(
+def exercise_1f(  # type: ignore
     spark: SparkSession, pairs: List[Tuple[str, int]]
 ) -> List[Tuple[str, int]]:
     """

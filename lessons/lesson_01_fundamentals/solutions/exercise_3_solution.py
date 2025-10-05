@@ -63,7 +63,7 @@ def exercise_3b(
     )
 
     # Convert to nested dictionary structure
-    result = defaultdict(dict)
+    result = defaultdict(dict)  # type: ignore
     for (region, category), amount in region_category_sales:
         result[region][category] = amount
 

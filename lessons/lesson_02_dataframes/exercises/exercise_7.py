@@ -34,7 +34,7 @@ def setup_spark() -> SparkSession:
     )
 
 
-def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float, float]:
+def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float, float]:  # type: ignore
     """
     Calculate statistics using RDD approach (Lesson 1 style).
 
@@ -54,7 +54,7 @@ def exercise_7a_rdd(spark: SparkSession, data: List[tuple]) -> Tuple[int, float,
     pass
 
 
-def exercise_7a_dataframe(
+def exercise_7a_dataframe(  # type: ignore
     spark: SparkSession, data: List[tuple]
 ) -> Tuple[int, float, float]:
     """
@@ -76,7 +76,7 @@ def exercise_7a_dataframe(
     pass
 
 
-def exercise_7b_rdd(
+def exercise_7b_rdd(  # type: ignore
     spark: SparkSession, data: List[tuple]
 ) -> List[Tuple[str, int, float]]:
     """
@@ -98,7 +98,7 @@ def exercise_7b_rdd(
     pass
 
 
-def exercise_7b_dataframe(
+def exercise_7b_dataframe(  # type: ignore
     spark: SparkSession, data: List[tuple]
 ) -> List[Tuple[str, int, float]]:
     """
@@ -120,7 +120,7 @@ def exercise_7b_dataframe(
     pass
 
 
-def exercise_7c_rdd(
+def exercise_7c_rdd(  # type: ignore
     spark: SparkSession, data1: List[tuple], data2: List[tuple]
 ) -> List[tuple]:
     """
@@ -144,7 +144,7 @@ def exercise_7c_rdd(
     pass
 
 
-def exercise_7c_dataframe(
+def exercise_7c_dataframe(  # type: ignore
     spark: SparkSession, data1: List[tuple], data2: List[tuple]
 ) -> List[tuple]:
     """
@@ -167,7 +167,7 @@ def exercise_7c_dataframe(
     pass
 
 
-def exercise_7d_caching_comparison(spark: SparkSession, data: List[tuple]):
+def exercise_7d_caching_comparison(spark: SparkSession, data: List[tuple]):  # type: ignore
     """
     Compare caching performance between RDD and DataFrame approaches.
 
@@ -193,7 +193,7 @@ def exercise_7d_caching_comparison(spark: SparkSession, data: List[tuple]):
     pass
 
 
-def exercise_7e_explain_plans(spark: SparkSession, data: List[tuple]):
+def exercise_7e_explain_plans(spark: SparkSession, data: List[tuple]):  # type: ignore
     """
     Compare execution plans between RDD and DataFrame operations.
 
@@ -218,7 +218,7 @@ def exercise_7e_explain_plans(spark: SparkSession, data: List[tuple]):
     pass
 
 
-def performance_benchmark(spark: SparkSession):
+def performance_benchmark(spark: SparkSession):  # type: ignore
     """
     Run comprehensive performance benchmarks comparing RDD vs DataFrame approaches.
     """
@@ -239,9 +239,9 @@ def performance_benchmark(spark: SparkSession):
     # RDD approach
     start_time = time.time()
     try:
-        result_rdd = exercise_7a_rdd(spark, large_data)
+        result_rdd_7a = exercise_7a_rdd(spark, large_data)
         rdd_time = time.time() - start_time
-        print(f"RDD approach: {rdd_time:.3f}s, Result: {result_rdd}")
+        print(f"RDD approach: {rdd_time:.3f}s, Result: {result_rdd_7a}")
     except Exception as e:
         print(f"RDD approach failed: {e}")
         rdd_time = float("inf")
@@ -249,9 +249,9 @@ def performance_benchmark(spark: SparkSession):
     # DataFrame approach
     start_time = time.time()
     try:
-        result_df = exercise_7a_dataframe(spark, large_data)
+        result_df_7a = exercise_7a_dataframe(spark, large_data)
         df_time = time.time() - start_time
-        print(f"DataFrame approach: {df_time:.3f}s, Result: {result_df}")
+        print(f"DataFrame approach: {df_time:.3f}s, Result: {result_df_7a}")
     except Exception as e:
         print(f"DataFrame approach failed: {e}")
         df_time = float("inf")
@@ -266,9 +266,9 @@ def performance_benchmark(spark: SparkSession):
     # RDD approach
     start_time = time.time()
     try:
-        result_rdd = exercise_7b_rdd(spark, large_data)
+        result_rdd_7b = exercise_7b_rdd(spark, large_data)
         rdd_time = time.time() - start_time
-        print(f"RDD approach: {rdd_time:.3f}s, {len(result_rdd)} groups")
+        print(f"RDD approach: {rdd_time:.3f}s, {len(result_rdd_7b)} groups")
     except Exception as e:
         print(f"RDD approach failed: {e}")
         rdd_time = float("inf")

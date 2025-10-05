@@ -85,7 +85,7 @@ def create_sample_data():
     print("Sample data files created successfully!")
 
 
-def exercise_2a(spark: SparkSession) -> List[Tuple[str, int]]:
+def exercise_2a(spark: SparkSession) -> List[Tuple[str, int]]:  # type: ignore
     """
     Read the sample book text and find the top 10 most frequent words (case-insensitive).
     Exclude common stop words and words shorter than 4 characters.
@@ -108,7 +108,7 @@ def exercise_2a(spark: SparkSession) -> List[Tuple[str, int]]:
     pass
 
 
-def exercise_2b(spark: SparkSession, text_lines: List[str]) -> Dict[str, List[str]]:
+def exercise_2b(spark: SparkSession, text_lines: List[str]) -> Dict[str, List[str]]:  # type: ignore
     """
     Categorize words by their starting letter.
 
@@ -134,7 +134,7 @@ def exercise_2b(spark: SparkSession, text_lines: List[str]) -> Dict[str, List[st
     pass
 
 
-def exercise_2c(spark: SparkSession) -> List[Tuple[str, int]]:
+def exercise_2c(spark: SparkSession) -> List[Tuple[str, int]]:  # type: ignore
     """
     Analyze log file and count occurrences of each log level.
 
@@ -154,7 +154,7 @@ def exercise_2c(spark: SparkSession) -> List[Tuple[str, int]]:
     pass
 
 
-def exercise_2d(
+def exercise_2d(  # type: ignore
     spark: SparkSession, sentences: List[str]
 ) -> List[Tuple[str, int, List[str]]]:
     """
@@ -177,7 +177,7 @@ def exercise_2d(
     pass
 
 
-def exercise_2e(spark: SparkSession, text_data: List[str]) -> Tuple[int, int, float]:
+def exercise_2e(spark: SparkSession, text_data: List[str]) -> Tuple[int, int, float]:  # type: ignore
     """
     Calculate text statistics: total words, unique words, and average word length.
 
@@ -198,7 +198,7 @@ def exercise_2e(spark: SparkSession, text_data: List[str]) -> Tuple[int, int, fl
     pass
 
 
-def exercise_2f(spark: SparkSession) -> List[Tuple[str, int]]:
+def exercise_2f(spark: SparkSession) -> List[Tuple[str, int]]:  # type: ignore
     """
     Find the most common word pairs (bigrams) in the sample book.
 

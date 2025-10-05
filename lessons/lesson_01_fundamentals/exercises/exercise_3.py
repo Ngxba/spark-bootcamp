@@ -57,7 +57,7 @@ def generate_sales_data(num_records: int = 10000) -> List[Dict[str, Any]]:
     return sales_data
 
 
-def exercise_3a(spark: SparkSession, sales_data: List[Dict]) -> List[Tuple[str, float]]:
+def exercise_3a(spark: SparkSession, sales_data: List[Dict]) -> List[Tuple[str, float]]:  # type: ignore
     """
     Calculate total sales amount by product category.
 
@@ -78,7 +78,7 @@ def exercise_3a(spark: SparkSession, sales_data: List[Dict]) -> List[Tuple[str, 
     pass
 
 
-def exercise_3b(
+def exercise_3b(  # type: ignore
     spark: SparkSession, sales_data: List[Dict]
 ) -> Dict[str, Dict[str, float]]:
     """
@@ -109,7 +109,7 @@ def exercise_3b(
     pass
 
 
-def exercise_3c(spark: SparkSession, numbers: List[int]) -> List[Tuple[int, List[int]]]:
+def exercise_3c(spark: SparkSession, numbers: List[int]) -> List[Tuple[int, List[int]]]:  # type: ignore
     """
     Find all factors for each number in the list.
 
@@ -133,7 +133,7 @@ def exercise_3c(spark: SparkSession, numbers: List[int]) -> List[Tuple[int, List
     pass
 
 
-def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:
+def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:  # type: ignore
     """
     Compare performance of computing standard deviation with and without caching.
 
@@ -156,7 +156,7 @@ def exercise_3d(spark: SparkSession, data: List[int]) -> Tuple[float, float]:
     pass
 
 
-def exercise_3e(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, int]]:
+def exercise_3e(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, int]]:  # type: ignore
     """
     Find anagrams in the text data and count them.
 
@@ -182,7 +182,7 @@ def exercise_3e(spark: SparkSession, text_data: List[str]) -> List[Tuple[str, in
     pass
 
 
-def exercise_3f(spark: SparkSession, data: List[int], k: int) -> List[int]:
+def exercise_3f(spark: SparkSession, data: List[int], k: int) -> List[int]:  # type: ignore
     """
     Find the k largest elements using RDD operations (without using takeOrdered).
 
@@ -205,7 +205,7 @@ def exercise_3f(spark: SparkSession, data: List[int], k: int) -> List[int]:
     pass
 
 
-def exercise_3g(
+def exercise_3g(  # type: ignore
     spark: SparkSession, transactions: List[Dict]
 ) -> List[Tuple[str, int, float]]:
     """
@@ -229,7 +229,7 @@ def exercise_3g(
     pass
 
 
-def run_performance_comparison(spark: SparkSession):
+def run_performance_comparison(spark: SparkSession):  # type: ignore
     """Demonstrate performance differences between different approaches."""
     print("\n🔬 Performance Comparison: Caching vs No Caching")
     print("-" * 50)
